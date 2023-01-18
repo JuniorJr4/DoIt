@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="sidebar">
+      <aside class="side">
+        <ul>
+          <li><button id="inbox">Inbox</button></li>
+          <li><button id="today">Today</button></li>
+          <li><button id="thisWeek">This Week</button></li>
+          <li><button id="addTask">Add Task</button></li>
+          <li><button id="clearTask">Delete Task</button></li>
+        </ul>
+        <ul>
+          <h2 class="projects">Projects</h2>
+          <li><button id="projects">This Week</button></li>
+          <li><button id="addProject">Add Project</button></li>
+        </ul>
+      </aside>
+    </div>
+    <div class="content">
+      <div class="new-task" id="myForm">
+        <h1>Add a Task</h1>
+
+        <label for="name"><b>Name</b></label>
+        <input
+          id="name"
+          type="text"
+          placeholder="Enter Name"
+          name="name"
+          required
+        />
+
+        <label for="due"><b>Due Date</b></label>
+        <input id="due" type="date" placeholder="Enter Due Date" name="due" />
+
+        <div class="task-btns">
+          <button id="submitBtn" type="button" class="btn">Submit</button>
+          <button type="button" class="btn cancel" onclick="closeForm()">
+            Close
+          </button>
+        </div>
+      </div>
+
+      <div class="task-info">
+        <label for="project"><b>Add to Project?</b></label>
+        <input id="project" type="text" placeholder="Project" name="project" />
+
+        <div class="pages-container">
+          <b>Mark as priority?</b>
+          <label class="tog round">
+            <!-- <input type="hidden" value="false" name="read" class="" > -->
+            <input
+              id="priority"
+              type="checkbox"
+              name="priority"
+              class="form-tog"
+              checked
+            />
+            <i></i>
+          </label>
+        </div>
+
+        <div class="info-btns">
+          <button id="submitBtn" type="button" class="btn">Submit</button>
+          <button type="button" class="btn cancel" onclick="closeForm()">
+            Close
+          </button>
+        </div>
+      </div>
+      <div class="myInbox">
+        
+      </div>
+    </div>
+    <script src="main.js"></script>
+  </body>
+</html>

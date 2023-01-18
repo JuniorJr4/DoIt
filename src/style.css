@@ -1,0 +1,45 @@
+.side {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 200px;
+    background-color: #eee;
+    
+  }
+
+  li, a {
+    text-decoration: none;
+    list-style: none;
+  }
+
+  .content {
+    position: relative;
+    left: 200px;
+    width:fit-content; 
+  }
+
+ .new-task {
+    display: none;
+  }
+
+  .new-task.active {
+    display: block;
+  }
+
+  .task-info {
+    display: none;
+  }
+
+  .myTask {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .myInbox {
+    display: none;
+  }
+
+  .myInbox.active {
+    display: block;
+  }
