@@ -11,9 +11,10 @@ export default class Storage {
     let items = []
     for (let i = 0; i < localStorage.length; i++) {
       let key = localStorage.key(i);
-      console.log(key);
+      // console.log(key);
       let value = JSON.parse(localStorage.getItem(key));
       items.push(value);
+      
     }
     // console.log(items);
     return items;
