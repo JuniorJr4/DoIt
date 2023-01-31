@@ -1,12 +1,9 @@
 import Task from "./task";
 import Storage from "./storage";
-import { format, isBefore, isToday, isThisWeek } from "date-fns";
+import Project from "./projects";
+import { format, isValid, isToday, isThisWeek } from "date-fns";
 
 export default class MenuUI {
-  // static displayAddTask() {
-
-  //   return taskForm;
-  // }
   static addMenuButtons() {
     const taskBtn = document.getElementById("addTask");
     const taskSubmit = document.getElementById("submitBtn");
@@ -22,6 +19,7 @@ export default class MenuUI {
     deleteTask.addEventListener("click", MenuUI.clearStorageBtn);
     todayBtn.addEventListener("click", MenuUI.todayTasks);
     thisWeekBtn.addEventListener("click", MenuUI.weekTasks);
+    addProject.addEventListener("click", MenuUI.addProject);
   }
   static addTaskBtn() {
     const taskForm = document.getElementById("myForm");
@@ -40,42 +38,52 @@ export default class MenuUI {
       `[data-key="${e.target.dataset.key}"]`
     );
     localStorage.removeItem(e.target.dataset.key);
-    console.log(e.target.dataset.key);
     myTask.innerHTML = "";
   }
   static submitTaskBtn() {
     const taskForm = document.getElementById("myForm");
     let taskName = document.getElementById("name");
     let dueDate = document.getElementById("due");
-    // const project = document.getElementById('project').value;
-    // const priority = document.getElementById('priority').checked;
-    // let cleanDate = Storage.formatDate(dueDate.value);
-
     let newTask = new Task(taskName.value, dueDate.value);
     console.log(typeof dueDate.value, dueDate.value);
     Storage.storeTask(taskName.value, newTask);
     taskForm.classList.add("new-task");
     taskName.value = "";
     dueDate.value = "";
-    // console.log(localStorage);
+  }
+
+  static submitProj() {
+    const projName = document.getElementById("projectName");
+    let newProj = new Project(projName.value);
+    projName.value = "";
   }
 
   static inboxButton() {
+    const className = "Task";
     const myInbox = document.querySelector(".myInbox");
     MenuUI.removeActive();
-    // myInbox.classList.add("active");
     myInbox.innerHTML = "";
-    let items = Storage.getAllItems();
+    let items = Storage.getTaskItems();
     console.log(items);
+    // let taskItems = Object.entries(items);
+    // let filterItems = taskItems.filter(([key, value]) => key.startsWith("Task-"));
+    // const filtered = Object.fromEntries(filterItems);
+    // console.log(filtered);
     items.forEach((el) => {
       let key = el.name;
       let value = new Date(el.dueDate);
-      // index++;
-      console.log(typeof value, typeof el.dueDate);
-      MenuUI.displayTasks(key, value);
+      console.log(isValid(value));
+      console.log(typeof(value), value);
+      MenuUI.displayTasks('Task', key, value);
     });
   }
-  static displayTasks(key, value) {
+  static projectButton() {}
+  static addProject() {
+    const projects = document.getElementById("project-form");
+    MenuUI.removeActive();
+    projects.classList.add("active");
+  }
+  static displayTasks(type, key, value) {
     const myInbox = document.querySelector(".myInbox");
     const myTask = document.createElement("div");
     const name = document.createElement("div");
@@ -84,10 +92,12 @@ export default class MenuUI {
     myInbox.classList.add("active");
     delTask.classList.add("delTask", "active");
     myTask.classList.add("myTask", "active");
-    myTask.dataset.key = key;
-    delTask.dataset.key = key;
+    myTask.dataset.key = type + "-" + key;
+    delTask.dataset.key = type + "-" + key;
     delTask.textContent = "X";
     delTask.addEventListener("click", MenuUI.removeTaskBtn);
+    console.log(isValid(value));
+    console.log(typeof(value), value);
     let newDate = Storage.formatDate(value);
     name.textContent = key;
     date.textContent = newDate;
@@ -104,14 +114,8 @@ export default class MenuUI {
     myInbox.classList.add("active");
     let today = new Date();
     myInbox.innerHTML = "";
-    // // console.log(isToday(today));
-    // for (let i = 0; i < localStorage.length; i++) {
-    //   let key = localStorage.key(i);
-    //   let value = JSON.parse(localStorage.getItem(key));
-    //   console.log(value);
-    //   let toCompare = new Date(value.dueDate);
-    // console.log(typeof(toCompare), value.dueDate);
-    let items = Storage.getAllItems();
+    let items = Storage.getTaskItems();
+    console.log(typeof items);
     items.forEach((el) => {
       let key = el.name;
       let value = new Date(el.dueDate);
@@ -119,7 +123,7 @@ export default class MenuUI {
         console.log("yes");
         MenuUI.displayTasks(key, value);
       } else {
-        console.log('suck it');
+        console.log("suck it");
       }
     });
   }
@@ -132,19 +136,7 @@ export default class MenuUI {
     let nextWeek = today.setDate(new Date().getDate() + 7);
     myInbox.innerHTML = "";
     console.log(today);
-    // for (let i = 0; i < localStorage.length; i++) {
-    //   let key = localStorage.key(i);
-    //   let value = JSON.parse(localStorage.getItem(key));
-    //   let toCompare = new Date(value.dueDate);
-    //   console.log(isBefore(toCompare, nextWeek));
-    //   if (isThisWeek(toCompare, 0)) {
-    //     console.log("yes");
-    //     MenuUI.displayTasks(key, value);
-    //   } else {
-    //     console.log("not working");
-    //   }
-    // }
-    let items = Storage.getAllItems();
+    let items = Storage.getTaskItems();
     items.forEach((el) => {
       let key = el.name;
       let value = new Date(el.dueDate);
@@ -152,7 +144,7 @@ export default class MenuUI {
         console.log("yes");
         MenuUI.displayTasks(key, value);
       } else {
-        console.log('suck it');
+        console.log("suck it");
       }
     });
   }

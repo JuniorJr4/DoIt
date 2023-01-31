@@ -27,6 +27,14 @@
     display: block;
   }
 
+  .project-info {
+    display: none;
+  }
+
+  .project-info.active {
+    display: block;
+  }
+
   .task-info {
     display: none;
   }
