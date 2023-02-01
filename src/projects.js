@@ -9,4 +9,7 @@ export default class Project {
   getName() {
     return this.name;
   }
+  addTask(task) {
+    this.taskList.push(task);
+  }
 }

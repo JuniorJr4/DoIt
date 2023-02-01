@@ -19,7 +19,7 @@ export default class Storage {
       if (key.startsWith("Task-")) {
         console.log(key);
         let value = JSON.parse(localStorage.getItem(key));
-        console.log(isValid(new Date(value.dueDate)));
+        console.log(value);
         items.push(value);
       }
     }
@@ -27,18 +27,18 @@ export default class Storage {
     return items;
   }
   static getAllProj() {
-    let items = [];
+    let projects = [];
     for (let i = 0; i < localStorage.length; i++) {
       let key = localStorage.key(i);
       if (key.startsWith("Proj-")) {
         console.log(key);
-        let value = JSON.parse(localStorage.getItem(key));
-        console.log(isValid(new Date(value.dueDate)));
-        items.push(value);
+        let proj = JSON.parse(localStorage.getItem(key));
+        console.log(proj);
+        projects.push(proj);
       }
     }
     // console.log(items);
-    return items;
+    return projects;
   }
   static formatDate(date) {
     if (isValid(date)) {
