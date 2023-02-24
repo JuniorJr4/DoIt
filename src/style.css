@@ -1,53 +1,61 @@
 .side {
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 200px;
-    background-color: #eee;
-    
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 200px;
+  background-color: #eee;
+}
 
-  li, a {
-    text-decoration: none;
-    list-style: none;
-  }
+li,
+a {
+  text-decoration: none;
+  list-style: none;
+}
 
-  .content {
-    position: relative;
-    left: 200px;
-    width:fit-content; 
-  }
+.content {
+  position: relative;
+  left: 200px;
+  width: fit-content;
+}
 
- .new-task {
-    display: none;
-  }
+.new-task {
+  display: none;
+}
 
-  .new-task.active {
-    display: block;
-  }
+.new-task.active {
+  display: block;
+}
 
-  .project-info {
-    display: none;
-  }
+.project-info {
+  display: none;
+}
 
-  .project-info.active {
-    display: block;
-  }
+.project-info.active {
+  display: block;
+}
 
-  .task-info {
-    display: none;
-  }
+.task-info {
+  display: none;
+}
 
-  .myTask {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-  }
+.myTask {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
 
-  .myInbox {
-    display: none;
-  }
+.myInbox {
+  display: none;
+}
 
-  .myInbox.active {
-    display: block;
-  }
+.myInbox.active {
+  display: block;
+}
+.proj-list {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.proj-list > button {
+  display: flex;
+  justify-content: space-between;
+}

@@ -12,4 +12,7 @@ export default class Project {
   addTask(task) {
     this.taskList.push(task);
   }
+  getTaskList() {
+    return this.taskList;
+  }
 }
