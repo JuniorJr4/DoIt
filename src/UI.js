@@ -6,7 +6,7 @@ import { format, isValid, isToday, isThisWeek } from "date-fns";
 export default class MenuUI {
   static addMenuButtons() {
     const taskBtn = document.getElementById("addTask");
-    const taskSubmit = document.getElementById("submitBtn");
+    
     const inboxBtn = document.getElementById("inbox");
     const todayBtn = document.getElementById("today");
     const thisWeekBtn = document.getElementById("thisWeek");
@@ -17,7 +17,6 @@ export default class MenuUI {
     projects.addEventListener("click", this.projectInbox);
     projSubmit.addEventListener("click", MenuUI.submitProj);
     taskBtn.addEventListener("click", MenuUI.addTaskBtn);
-    taskSubmit.addEventListener("click", MenuUI.submitTaskBtn);
     inboxBtn.addEventListener("click", MenuUI.inboxButton);
     deleteTask.addEventListener("click", MenuUI.clearStorageBtn);
     todayBtn.addEventListener("click", MenuUI.todayTasks);
@@ -33,6 +32,8 @@ export default class MenuUI {
     const taskForm = document.getElementById("myForm");
     MenuUI.removeActive();
     taskForm.classList.add("active");
+    const taskSubmit = document.getElementById("submitBtn");
+    // taskSubmit.addEventListener("click", MenuUI.submitTaskBtn);
   }
   static clearStorageBtn() {
     localStorage.clear();
@@ -53,8 +54,24 @@ export default class MenuUI {
     let taskName = document.getElementById("name");
     let dueDate = document.getElementById("due");
     let newTask = new Task(taskName.value, dueDate.value);
-    console.log(window[taskName.value]);
     Storage.storeTask(taskName.value, newTask);
+    taskName.value = "";
+    dueDate.value = "";
+  }
+  static submitProjTaskBtn(e) {
+    const taskForm = document.getElementById("myProjForm");
+    let taskName = document.getElementById("projTaskName");
+    let dueDate = document.getElementById("projTaskDue");
+    let projToEdit = Storage.getProject(e.target.dataset.key);
+    let newTask = new Task(taskName.value, dueDate.value);
+    console.log(newTask.name);
+    projToEdit.taskList.push([newTask.name, new Date(newTask.dueDate)]);
+    console.log(projToEdit);
+    Storage.storeProj(e.target.dataset.key, projToEdit);
+    MenuUI.listProjectList(projToEdit);
+    // let newTask = new Task(taskName.value, dueDate.value);
+    // console.log(window[taskName.value]);
+    // Storage.storeTask(taskName.value, newTask);
     // taskForm.classList.add("new-task");
     taskName.value = "";
     dueDate.value = "";
@@ -100,8 +117,10 @@ export default class MenuUI {
     const proj = document.createElement("button");
     const projectName = document.createElement("div");
     const deleteProj = document.createElement("div");
+    proj.dataset.type = 'Proj';
     proj.dataset.key = el.name;
     projectName.textContent = el.name;
+    projectName.dataset.type = 'Proj';
     projectName.dataset.key = el.name;
     deleteProj.textContent = "X";
     proj.addEventListener("click", this.projButton);
@@ -119,6 +138,7 @@ export default class MenuUI {
     console.log(proj, e.target.dataset.key);
     const myInbox = document.querySelector(".myInbox");
     const addProjTaskBtn = document.createElement("button");
+    addProjTaskBtn.dataset.key = e.target.dataset.key;
     addProjTaskBtn.addEventListener("click", MenuUI.addProjTaskBtn);
     addProjTaskBtn.textContent = "+ Add Task";
     MenuUI.removeActive();
@@ -136,19 +156,24 @@ export default class MenuUI {
     myInbox.appendChild(projTitle);
     myInbox.appendChild(addProjTaskBtn);
   }
-  static addProjTaskBtn() {
-    const taskForm = document.getElementById("myForm");
+  static addProjTaskBtn(e) {
+    const taskForm = document.getElementById("myProjForm");
+    const submitTaskBtn = document.getElementById("submitProjTaskBtn");
+    
     taskForm.classList.add("active");
+    submitTaskBtn.classList.add("add-proj-task");
+    const submitProjTaskBtn = document.querySelector('.add-proj-task');
+    submitTaskBtn.dataset.key = e.target.dataset.key;
+    submitProjTaskBtn.addEventListener('click', MenuUI.submitProjTaskBtn);
+    
     console.log('yes');
   }
 
   //finish after able to add tasks to projects
   static listProjectList(proj) {
     proj.taskList.forEach((el) => {
-      const taskName = document.createElement("div");
-      const name = document.createElement("div");
-      const date = document.createElement("div");
-      const delTask = document.createElement("button");
+      console.log(el, el[0], el[1]);
+      MenuUI.displayTasks("Proj", el[0], el[1]);
     });
   }
   static addProject() {
@@ -157,7 +182,6 @@ export default class MenuUI {
     projects.classList.add("active");
   }
   static displayTasks(type, key, value) {
-    if (type === "Task") {
       const myInbox = document.querySelector(".myInbox");
       const myTask = document.createElement("div");
       const name = document.createElement("div");
@@ -169,20 +193,24 @@ export default class MenuUI {
       myTask.dataset.key = type + "-" + key;
       delTask.dataset.key = type + "-" + key;
       delTask.textContent = "X";
-      delTask.addEventListener("click", MenuUI.removeTaskBtn);
+      
       console.log(isValid(value));
       console.log(typeof value, value);
       let newDate = Storage.formatDate(value);
       name.textContent = key;
       date.textContent = newDate;
-      // console.log(key, value);
+      console.log(value, newDate);
       myTask.appendChild(name);
       myTask.appendChild(date);
       myTask.appendChild(delTask);
       myInbox.appendChild(myTask);
+      if (type === "Task") {
+        delTask.addEventListener("click", MenuUI.removeTaskBtn);
+    } else if (type === "Proj") {
+      delTask.addEventListener("click", MenuUI.removeProjBtn); //update to remove proj task
     }
   }
-  static addProjTask() {}
+ 
   static displayProjects(type, key) {
     const myInbox = document.querySelector(".myInbox");
     const projTitle = document.createElement("h3");

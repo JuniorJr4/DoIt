@@ -34,6 +34,13 @@ a {
 .project-info.active {
   display: block;
 }
+.new-proj-task {
+  display: none;
+}
+
+.new-proj-task.active {
+  display: block;
+}
 
 .task-info {
   display: none;

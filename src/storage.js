@@ -12,6 +12,11 @@ export default class Storage {
     let className = "Proj";
     localStorage.setItem(className + "-" + id, JSON.stringify(proj));
   }
+  static getProject(id) {
+    let className = "Proj";
+    let proj = JSON.parse(localStorage.getItem(className + "-" + id));
+    return proj;
+  }
   static getTaskItems() {
     let items = [];
     for (let i = 0; i < localStorage.length; i++) {
