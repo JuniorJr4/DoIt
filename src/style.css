@@ -33,6 +33,7 @@ a {
 
 .project-info.active {
   display: block;
+  
 }
 .new-proj-task {
   display: none;
@@ -40,6 +41,9 @@ a {
 
 .new-proj-task.active {
   display: block;
+  position: relative;
+  left: 200px;
+  width: fit-content;
 }
 
 .task-info {
@@ -49,6 +53,14 @@ a {
 .myTask {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
+}
+
+.listDiv {
+  display: none;
+}
+
+.listDiv.active {
+  display: block;
 }
 
 .myInbox {
@@ -65,4 +77,20 @@ a {
 .proj-list > button {
   display: flex;
   justify-content: space-between;
+}
+
+.addProjTaskBtn.inactive {
+  display: none
+}
+
+#project-form {
+  position: relative;
+  left: 200px;
+  width: fit-content;
+}
+
+#myForm {
+  position: relative;
+  left: 200px;
+  width: fit-content;
 }
