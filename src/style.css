@@ -13,6 +13,10 @@ a {
   list-style: none;
 }
 
+.DoIt {
+  padding-left: 40px;
+}
+
 .content {
   position: relative;
   left: 200px;
@@ -55,20 +59,29 @@ a {
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-.listDiv {
+#listDiv {
   display: none;
 }
 
-.listDiv.active {
+#listDiv.active {
   display: block;
 }
 
-.myInbox {
+/* #listDiv {
+  position: relative;
+  left: 200px;
+  width: fit-content; 
+} */
+
+.myInbox, #myProjForm {
   display: none;
 }
 
-.myInbox.active {
+.myInbox.active, #myProjForm.active {
   display: block;
+  /* position: relative;
+  left: 200px;
+  width: fit-content; */
 }
 .proj-list {
   display: grid;

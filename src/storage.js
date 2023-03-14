@@ -15,7 +15,6 @@ export default class Storage {
   static getProject(id) {
     let className = "Proj";
     let proj = JSON.parse(localStorage.getItem(className + "-" + id));
-    console.log(proj);
     return proj;
   }
   static getTaskItems() {
@@ -23,13 +22,10 @@ export default class Storage {
     for (let i = 0; i < localStorage.length; i++) {
       let key = localStorage.key(i);
       if (key.startsWith("Task-")) {
-        console.log(key);
         let value = JSON.parse(localStorage.getItem(key));
-        console.log(value);
         items.push(value);
       }
     }
-    // console.log(items);
     return items;
   }
   static getAllProj() {
@@ -37,13 +33,10 @@ export default class Storage {
     for (let i = 0; i < localStorage.length; i++) {
       let key = localStorage.key(i);
       if (key.startsWith("Proj-")) {
-        console.log(key);
         let proj = JSON.parse(localStorage.getItem(key));
-        console.log(proj);
         projects.push(proj);
       }
     }
-    // console.log(items);
     return projects;
   }
   static formatDate(date) {
