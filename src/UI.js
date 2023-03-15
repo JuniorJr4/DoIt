@@ -38,9 +38,9 @@ export default class MenuUI {
   }
 
   static removeTaskBtn(e) {
-    const delTask = document.querySelector(
-      `[data-key="${e.target.dataset.key}"]`
-    );
+    // const delTask = document.querySelector(
+    //   `[data-key="${e.target.dataset.key}"]`
+    // );
     const myTask = document.querySelector(
       `[data-key="${e.target.dataset.key}"]`
     );
@@ -59,6 +59,14 @@ export default class MenuUI {
     Storage.storeProj(projToEdit.name, projToEdit);
     MenuUI.projButton(e);
     myTask.innerHTML = "";
+  }
+  static removeProjBtn(e) {
+    const projectList = document.querySelector(".proj-list");
+    localStorage.removeItem("Proj-" + `${e.target.dataset.key}`);
+    let projList = Storage.getAllProj();
+    console.log(projList);
+    projectList.innerHTML = "";  
+    MenuUI.listProjects(projList);
   }
   static submitTaskBtn() {
     const taskForm = document.getElementById("myForm");
@@ -85,7 +93,7 @@ export default class MenuUI {
     dueDate.value = "";
     MenuUI.projButton(e);
   }
-  
+
   static submitProj() {
     let projName = document.getElementById("projectName");
     let newProj = new Project(projName.value);
@@ -120,17 +128,20 @@ export default class MenuUI {
     const listOfProjects = document.querySelector(".proj-list");
     const proj = document.createElement("button");
     const projectName = document.createElement("div");
-    const deleteProj = document.createElement("div");
+    const deleteProj = document.createElement("button");
     proj.dataset.type = "Proj";
     proj.dataset.key = el.name;
+    proj.setAttribute("id", el.name);
     projectName.textContent = el.name;
     projectName.dataset.type = "Proj";
     projectName.dataset.key = el.name;
-    deleteProj.textContent = "X";
+    deleteProj.textContent = " X ";
     proj.addEventListener("click", this.projButton);
+    deleteProj.addEventListener("click", MenuUI.removeProjBtn);
     proj.appendChild(projectName);
-    proj.appendChild(deleteProj);
+    
     listOfProjects.appendChild(proj);
+    listOfProjects.appendChild(deleteProj);
   }
   static listProjects(name) {
     name.forEach((el) => {
@@ -150,7 +161,7 @@ export default class MenuUI {
     MenuUI.removeActive();
     listDiv.innerHTML = "";
     listDiv.classList.add("listDiv", "active");
-    myInbox.classList.add("active");    
+    myInbox.classList.add("active");
     projTitle.classList.add("projTitle", "active");
     projTitle.textContent = e.target.dataset.key;
     listDiv.appendChild(projTitle);
