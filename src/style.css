@@ -22,6 +22,10 @@ body {
   font-family: "Roboto";
 }
 
+img {
+  height: 12px;
+}
+
 .side {
   position: fixed;
   top: 0;
@@ -80,7 +84,8 @@ a {
 
 .myTask {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 26px 1fr 1fr 26px;
+  align-items: center;
 }
 
 #listDiv {
@@ -97,8 +102,12 @@ a {
   width: fit-content; 
 } */
 
-.myInbox, #myProjForm {
+.myInbox, #myProjForm, .name, .date, .nameName, .dateDate {
   display: none;
+}
+
+.name.active, .date.active, .nameName.active, .dateDate.active {
+  display: block;
 }
 
 .myInbox.active, #myProjForm.active {

@@ -22,6 +22,7 @@ export default class MenuUI {
     thisWeekBtn.addEventListener("click", MenuUI.weekTasks);
     addProject.addEventListener("click", this.addProject);
     Storage.getTaskItems();
+    MenuUI.inboxButton();
     let projList = Storage.getAllProj();
     this.listProjects(projList);
   }
@@ -44,7 +45,7 @@ export default class MenuUI {
     const myTask = document.querySelector(
       `[data-key="${e.target.dataset.key}"]`
     );
-    localStorage.removeItem(e.target.dataset.key);
+    localStorage.removeItem("Task-" + e.target.dataset.key);
     myTask.innerHTML = "";
   }
   static removeProjTaskBtn(e) {
@@ -62,7 +63,7 @@ export default class MenuUI {
   }
   static removeProjBtn(e) {
     const projectList = document.querySelector(".proj-list");
-    localStorage.removeItem("Proj-" + `${e.target.dataset.key}`);
+    localStorage.removeItem("Proj-" + e.target.dataset.key);
     let projList = Storage.getAllProj();
     console.log(projList);
     projectList.innerHTML = "";  
@@ -105,8 +106,12 @@ export default class MenuUI {
 
   static inboxButton() {
     const listDiv = document.getElementById("listDiv");
+    const taskTitle = document.createElement("h3");
     MenuUI.removeActive();
+    taskTitle.classList.add("task-title", "active");
+    taskTitle.textContent = "DoIt! List";
     listDiv.innerHTML = "";
+    listDiv.appendChild(taskTitle);
     let items = Storage.getTaskItems();
     items.forEach((el) => {
       let key = el.name;
@@ -116,8 +121,12 @@ export default class MenuUI {
   }
   static projectInbox() {
     const listDiv = document.getElementById("listDiv");
+    const projTitle = document.createElement("h3");
+    projTitle.classList.add("proj-title");
+    projTitle.textContent = "Projects";
     MenuUI.removeActive();
     listDiv.innerHTML = "";
+    listDiv.appendChild(projTitle);
     let items = Storage.getAllProj();
     items.forEach((el) => {
       let key = el.name;
@@ -136,6 +145,7 @@ export default class MenuUI {
     projectName.dataset.type = "Proj";
     projectName.dataset.key = el.name;
     deleteProj.textContent = " X ";
+    deleteProj.dataset.key = el.name;
     proj.addEventListener("click", this.projButton);
     deleteProj.addEventListener("click", MenuUI.removeProjBtn);
     proj.appendChild(projectName);
@@ -198,11 +208,24 @@ export default class MenuUI {
     const myInbox = document.querySelector(".myInbox");
     const addProjTaskBtn = document.querySelector(".addProjTaskBtn");
     const myTask = document.createElement("div");
-    const name = document.createElement("div");
-    const date = document.createElement("div");
+    const nameName = document.createElement("p");
+    const name = document.createElement("input");
+    const nameDiv = document.createElement("div");
+    const dateDate = document.createElement("p");
+    const date = document.createElement("input");
+    const dateDiv = document.createElement("div");
     const delTask = document.createElement("button");
+    const editBtn = document.createElement("button");
+    const editImg = document.createElement("img");
+    name.setAttribute("type", "text");
+    date.setAttribute("type", "date");  
+    editImg.src = "pencil-icon.png";
     myInbox.classList.add("active");
     listContainer.classList.add("active");
+    nameName.classList.add("nameName", "active");
+    dateDate.classList.add("dateDate", "active");
+    name.classList.add("name");
+    date.classList.add("date");
     delTask.classList.add("delTask", "active");
     myTask.classList.add("myTask", "active");
     if (type === "Proj") {
@@ -210,19 +233,29 @@ export default class MenuUI {
       myTask.dataset.key = projName;
       delTask.dataset.type = type;
       delTask.dataset.key = projName;
+      //is this needed??
       delTask.dataset.task = `${projName + "-" + key}`;
     } else if (type === "Task") {
       myTask.dataset.type = type;
       myTask.dataset.key = key;
+      editBtn.dataset.type = type;
+      editBtn.dataset.key = key;
       delTask.dataset.type = type;
       delTask.dataset.key = key;
     }
     delTask.textContent = "X";
     let newDate = Storage.formatDate(value);
-    name.textContent = key;
-    date.textContent = newDate;
-    myTask.appendChild(name);
-    myTask.appendChild(date);
+    nameName.textContent = key;
+    name.setAttribute("value", key);
+    dateDate.textContent = newDate;
+    editBtn.appendChild(editImg);
+    myTask.appendChild(editBtn);
+    nameDiv.appendChild(name);
+    nameDiv.appendChild(nameName);
+    dateDiv.appendChild(date);
+    dateDiv.appendChild(dateDate);
+    myTask.appendChild(nameDiv);
+    myTask.appendChild(dateDiv);
     myTask.appendChild(delTask);
     listContainer.appendChild(myTask);
     myInbox.insertBefore(listContainer, addProjTaskBtn);
@@ -234,13 +267,12 @@ export default class MenuUI {
   }
 
   static displayProjects(type, key) {
+    const listDiv = document.getElementById("listDiv");
     const myInbox = document.querySelector(".myInbox");
-    const projTitle = document.createElement("h3");
     const name = document.createElement("div");
     const delTask = document.createElement("button");
     const myTask = document.createElement("div");
-    projTitle.classList.add("proj-title");
-    projTitle.textContent = "Projects";
+    listDiv.classList.add("active");
     myInbox.classList.add("active");
     delTask.classList.add("delTask", "active");
     myTask.classList.add("myTask", "active");
@@ -251,15 +283,18 @@ export default class MenuUI {
     name.textContent = key;
     myTask.appendChild(name);
     myTask.appendChild(delTask);
-    myInbox.appendChild(projTitle);
-    myInbox.appendChild(myTask);
+    listDiv.appendChild(myTask);
   }
   static todayTasks() {
     const myInbox = document.querySelector(".myInbox");
     const listDiv = document.getElementById("listDiv");
+    const taskTitle = document.createElement("h3");
+    taskTitle.classList.add("task-title", "active");
+    taskTitle.textContent = "DoIt! List";
     MenuUI.removeActive();
     myInbox.classList.add("active");
     listDiv.innerHTML = "";
+    listDiv.appendChild(taskTitle);
     let items = Storage.getTaskItems();
     items.forEach((el) => {
       let key = el.name;
@@ -275,10 +310,14 @@ export default class MenuUI {
   static weekTasks() {
     const myInbox = document.querySelector(".myInbox");
     const listDiv = document.getElementById("listDiv");
+    const taskTitle = document.createElement("h3");
+    taskTitle.classList.add("task-title", "active");
+    taskTitle.textContent = "DoIt! List";
     MenuUI.removeActive();
     myInbox.classList.add("active");
     let today = new Date();
     listDiv.innerHTML = "";
+    listDiv.appendChild(taskTitle);
     let items = Storage.getTaskItems();
     items.forEach((el) => {
       let key = el.name;
