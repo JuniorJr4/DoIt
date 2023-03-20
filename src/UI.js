@@ -215,17 +215,14 @@ export default class MenuUI {
     const date = document.createElement("input");
     const dateDiv = document.createElement("div");
     const delTask = document.createElement("button");
-    const editBtn = document.createElement("button");
-    const editImg = document.createElement("img");
     name.setAttribute("type", "text");
     date.setAttribute("type", "date");  
-    editImg.src = "pencil-icon.png";
     myInbox.classList.add("active");
     listContainer.classList.add("active");
-    nameName.classList.add("nameName", "active");
-    dateDate.classList.add("dateDate", "active");
-    name.classList.add("name");
-    date.classList.add("date");
+    nameName.classList.add("name-el", "active");
+    dateDate.classList.add("date-el", "active");
+    name.classList.add("name-input");
+    date.classList.add("date-input");
     delTask.classList.add("delTask", "active");
     myTask.classList.add("myTask", "active");
     if (type === "Proj") {
@@ -238,18 +235,19 @@ export default class MenuUI {
     } else if (type === "Task") {
       myTask.dataset.type = type;
       myTask.dataset.key = key;
-      editBtn.dataset.type = type;
-      editBtn.dataset.key = key;
       delTask.dataset.type = type;
       delTask.dataset.key = key;
     }
     delTask.textContent = "X";
     let newDate = Storage.formatDate(value);
+    console.log(newDate);
     nameName.textContent = key;
     name.setAttribute("value", key);
+    name.dataset.key = key;
+    nameName.dataset.key = key;
+    date.dataset.key = key;
+    dateDate.dataset.key = key;
     dateDate.textContent = newDate;
-    editBtn.appendChild(editImg);
-    myTask.appendChild(editBtn);
     nameDiv.appendChild(name);
     nameDiv.appendChild(nameName);
     dateDiv.appendChild(date);
@@ -259,11 +257,59 @@ export default class MenuUI {
     myTask.appendChild(delTask);
     listContainer.appendChild(myTask);
     myInbox.insertBefore(listContainer, addProjTaskBtn);
+    nameName.addEventListener("click", MenuUI.editTaskName);
+    name.addEventListener("blur", MenuUI.submitTaskNameFromEdit);
+    dateDate.addEventListener("click", MenuUI.editTaskDate);
+    date.addEventListener("blur", MenuUI.submitTaskDateFromEdit);
     if (type === "Task") {
       delTask.addEventListener("click", MenuUI.removeTaskBtn);
     } else if (type === "Proj") {
       delTask.addEventListener("click", MenuUI.removeProjTaskBtn); //update to remove proj task
     }
+  }
+  static editTaskName(e) {
+    const nameInput = document.querySelector('.name-input[data-key="' + e.target.dataset.key + '"]');
+    const nameP = document.querySelector('.name-el[data-key="' + e.target.dataset.key + '"]');
+    nameP.classList.remove("active");
+    nameInput.classList.add("active");
+  }
+
+  static editTaskDate(e) {
+    const dateInput = document.querySelector('.date-input[data-key="' + e.target.dataset.key + '"]');
+    const dateP = document.querySelector('.date-el[data-key="' + e.target.dataset.key + '"]');
+    dateP.classList.remove("active");
+    dateInput.classList.add("active");
+  }
+
+  static submitTaskDateFromEdit(e) {  
+    const taskDiv = document.querySelector('[data-type="Task"][data-key="' + e.target.dataset.key + '"]');
+    const dateInput = document.querySelector('.date-input[data-key="' + e.target.dataset.key + '"]');
+    const dateP = document.querySelector('.date-el[data-key="' + e.target.dataset.key + '"]');
+    dateP.classList.add("active");
+    dateInput.classList.remove("active");
+    const task = Storage.getTask(e.target.dataset.key);
+    const newTask = new Task(task.name, dateInput.value);
+    Storage.removeTask(e.target.dataset.key);
+    Storage.storeTask(newTask.name, newTask);
+    let newDate = new Date(newTask.dueDate);
+    taskDiv.remove()
+    MenuUI.displayTasks("Task", newTask.name, newDate, null);
+  }
+  static submitTaskNameFromEdit(e) {
+    const taskDiv = document.querySelector('[data-type="Task"][data-key="' + e.target.dataset.key + '"]');
+    const nameInput = document.querySelector('.name-input[data-key="' + e.target.dataset.key + '"]');
+    const nameP = document.querySelector('.name-el[data-key="' + e.target.dataset.key + '"]');
+    nameP.classList.add("active");
+    nameInput.classList.remove("active");
+    const task = Storage.getTask(e.target.dataset.key);
+    console.log(task);
+    const newTask = new Task(nameInput.value, task.dueDate);
+    console.log(newTask.dueDate);
+    Storage.removeTask(e.target.dataset.key);
+    Storage.storeTask(newTask.name, newTask);
+    let newDate = new Date(newTask.dueDate);
+    taskDiv.remove();
+    MenuUI.displayTasks("Task", newTask.name, newDate, "Tasks");
   }
 
   static displayProjects(type, key) {

@@ -5,8 +5,13 @@ export default class Storage {
     let className = "Task";
     localStorage.setItem(className + "-" + id, JSON.stringify(task));
   }
+  static getTask(id) {
+    let className = "Task";
+    let task = JSON.parse(localStorage.getItem(className + "-" + id));
+    return task;
+    }
   static removeTask(key) {
-    localStorage.removeItem(key);
+    localStorage.removeItem("Task-" + key);
   }
   static storeProj(id, proj) {
     let className = "Proj";
@@ -40,6 +45,7 @@ export default class Storage {
     return projects;
   }
   static formatDate(date) {
+    console.log(isValid(date));
     if (isValid(date)) {
       const formattedDate = format(date, "dd/MM/yyyy");
       return formattedDate;

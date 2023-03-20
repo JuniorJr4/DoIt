@@ -1,5 +1,5 @@
 :root {
-  --red: 
+  --red: ;
 }
 
 @font-face {
@@ -65,7 +65,6 @@ a {
 
 .project-info.active {
   display: block;
-  
 }
 .new-proj-task {
   display: none;
@@ -84,7 +83,7 @@ a {
 
 .myTask {
   display: grid;
-  grid-template-columns: 26px 1fr 1fr 26px;
+  grid-template-columns: 1fr 1fr 26px;
   align-items: center;
 }
 
@@ -102,15 +101,24 @@ a {
   width: fit-content; 
 } */
 
-.myInbox, #myProjForm, .name, .date, .nameName, .dateDate {
+.myInbox,
+#myProjForm,
+.name-input,
+.date-input,
+.name-el,
+.date-el {
   display: none;
 }
 
-.name.active, .date.active, .nameName.active, .dateDate.active {
+.name-input.active,
+.date-input.active,
+.name-el.active,
+.date-el.active {
   display: block;
 }
 
-.myInbox.active, #myProjForm.active {
+.myInbox.active,
+#myProjForm.active {
   display: block;
   /* position: relative;
   left: 200px;
@@ -126,7 +134,7 @@ a {
 }
 
 .addProjTaskBtn.inactive {
-  display: none
+  display: none;
 }
 
 #project-form {
