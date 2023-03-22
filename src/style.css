@@ -104,14 +104,18 @@ a {
 .myInbox,
 #myProjForm,
 .name-input,
+.name-input-proj,
 .date-input,
+.date-input-proj,
 .name-el,
 .date-el {
   display: none;
 }
 
 .name-input.active,
+.name-input-proj.active,
 .date-input.active,
+.date-input-proj.active,
 .name-el.active,
 .date-el.active {
   display: block;

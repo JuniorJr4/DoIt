@@ -56,7 +56,9 @@ export default class MenuUI {
       `[data-task="${e.target.dataset.task}"]`
     );
     let projToEdit = Storage.getProject(e.target.dataset.key);
+    console.log(projToEdit);
     projToEdit.taskList.splice(e.target.dataset.index, 1);
+    console.log(projToEdit);
     Storage.storeProj(projToEdit.name, projToEdit);
     MenuUI.projButton(e);
     myTask.innerHTML = "";
@@ -66,7 +68,7 @@ export default class MenuUI {
     localStorage.removeItem("Proj-" + e.target.dataset.key);
     let projList = Storage.getAllProj();
     console.log(projList);
-    projectList.innerHTML = "";  
+    projectList.innerHTML = "";
     MenuUI.listProjects(projList);
   }
   static submitTaskBtn() {
@@ -149,7 +151,7 @@ export default class MenuUI {
     proj.addEventListener("click", this.projButton);
     deleteProj.addEventListener("click", MenuUI.removeProjBtn);
     proj.appendChild(projectName);
-    
+
     listOfProjects.appendChild(proj);
     listOfProjects.appendChild(deleteProj);
   }
@@ -195,7 +197,9 @@ export default class MenuUI {
   static listProjectList(proj) {
     const listContainer = document.querySelector(".listDiv");
     proj.taskList.forEach((el) => {
-      MenuUI.displayTasks("Proj", el[0], el[1], proj.name);
+      console.log(el[0], el[1]);
+      let newDate = new Date(el[1]);
+      MenuUI.displayTasks("Proj", el[0], newDate, proj.name);
     });
   }
   static addProject() {
@@ -216,27 +220,41 @@ export default class MenuUI {
     const dateDiv = document.createElement("div");
     const delTask = document.createElement("button");
     name.setAttribute("type", "text");
-    date.setAttribute("type", "date");  
+    date.setAttribute("type", "date");
     myInbox.classList.add("active");
     listContainer.classList.add("active");
-    nameName.classList.add("name-el", "active");
-    dateDate.classList.add("date-el", "active");
-    name.classList.add("name-input");
-    date.classList.add("date-input");
+    // nameName.classList.add("name-el", "active");
+    // dateDate.classList.add("date-el", "active");
+    // name.classList.add("name-input");
+    // date.classList.add("date-input");
     delTask.classList.add("delTask", "active");
     myTask.classList.add("myTask", "active");
     if (type === "Proj") {
+      nameName.classList.add("name-el-proj", "active");
+      dateDate.classList.add("date-el-proj", "active");
+      name.classList.add("name-input-proj");
+      date.classList.add("date-input-proj");
       myTask.dataset.type = type;
       myTask.dataset.key = projName;
       delTask.dataset.type = type;
       delTask.dataset.key = projName;
       //is this needed??
-      delTask.dataset.task = `${projName + "-" + key}`;
+      delTask.dataset.task = key;
+      nameName.addEventListener("click", MenuUI.editProjTaskName);
+      dateDate.addEventListener("click", MenuUI.editProjTaskDate);
     } else if (type === "Task") {
+      nameName.classList.add("name-el", "active");
+      dateDate.classList.add("date-el", "active");
+      name.classList.add("name-input");
+      date.classList.add("date-input");
       myTask.dataset.type = type;
       myTask.dataset.key = key;
       delTask.dataset.type = type;
       delTask.dataset.key = key;
+      nameName.addEventListener("click", MenuUI.editTaskName);
+      name.addEventListener("blur", MenuUI.submitTaskNameFromEdit);
+      dateDate.addEventListener("click", MenuUI.editTaskDate);
+      date.addEventListener("blur", MenuUI.submitTaskDateFromEdit);
     }
     delTask.textContent = "X";
     let newDate = Storage.formatDate(value);
@@ -257,10 +275,7 @@ export default class MenuUI {
     myTask.appendChild(delTask);
     listContainer.appendChild(myTask);
     myInbox.insertBefore(listContainer, addProjTaskBtn);
-    nameName.addEventListener("click", MenuUI.editTaskName);
-    name.addEventListener("blur", MenuUI.submitTaskNameFromEdit);
-    dateDate.addEventListener("click", MenuUI.editTaskDate);
-    date.addEventListener("blur", MenuUI.submitTaskDateFromEdit);
+
     if (type === "Task") {
       delTask.addEventListener("click", MenuUI.removeTaskBtn);
     } else if (type === "Proj") {
@@ -268,23 +283,57 @@ export default class MenuUI {
     }
   }
   static editTaskName(e) {
-    const nameInput = document.querySelector('.name-input[data-key="' + e.target.dataset.key + '"]');
-    const nameP = document.querySelector('.name-el[data-key="' + e.target.dataset.key + '"]');
+    const nameInput = document.querySelector(
+      '.name-input[data-key="' + e.target.dataset.key + '"]'
+    );
+    const nameP = document.querySelector(
+      '.name-el[data-key="' + e.target.dataset.key + '"]'
+    );
     nameP.classList.remove("active");
     nameInput.classList.add("active");
   }
-
-  static editTaskDate(e) {
-    const dateInput = document.querySelector('.date-input[data-key="' + e.target.dataset.key + '"]');
-    const dateP = document.querySelector('.date-el[data-key="' + e.target.dataset.key + '"]');
+  static editProjTaskName(e) {
+    const nameInput = document.querySelector(
+      '.name-input-proj[data-key="' + e.target.dataset.key + '"]'
+    );
+    const nameP = document.querySelector(
+      '.name-el-proj[data-key="' + e.target.dataset.key + '"]'
+    );
+    nameP.classList.remove("active");
+    nameInput.classList.add("active");
+  }
+  static editProjTaskDate(e) {
+    const dateInput = document.querySelector(
+      '.date-input-proj[data-key="' + e.target.dataset.key + '"]'
+    );
+    const dateP = document.querySelector(
+      '.date-el-proj[data-key="' + e.target.dataset.key + '"]'
+    );
     dateP.classList.remove("active");
     dateInput.classList.add("active");
   }
 
-  static submitTaskDateFromEdit(e) {  
-    const taskDiv = document.querySelector('[data-type="Task"][data-key="' + e.target.dataset.key + '"]');
-    const dateInput = document.querySelector('.date-input[data-key="' + e.target.dataset.key + '"]');
-    const dateP = document.querySelector('.date-el[data-key="' + e.target.dataset.key + '"]');
+  static editTaskDate(e) {
+    const dateInput = document.querySelector(
+      '.date-input[data-key="' + e.target.dataset.key + '"]'
+    );
+    const dateP = document.querySelector(
+      '.date-el[data-key="' + e.target.dataset.key + '"]'
+    );
+    dateP.classList.remove("active");
+    dateInput.classList.add("active");
+  }
+
+  static submitTaskDateFromEdit(e) {
+    const taskDiv = document.querySelector(
+      '[data-type="Task"][data-key="' + e.target.dataset.key + '"]'
+    );
+    const dateInput = document.querySelector(
+      '.date-input[data-key="' + e.target.dataset.key + '"]'
+    );
+    const dateP = document.querySelector(
+      '.date-el[data-key="' + e.target.dataset.key + '"]'
+    );
     dateP.classList.add("active");
     dateInput.classList.remove("active");
     const task = Storage.getTask(e.target.dataset.key);
@@ -292,13 +341,19 @@ export default class MenuUI {
     Storage.removeTask(e.target.dataset.key);
     Storage.storeTask(newTask.name, newTask);
     let newDate = new Date(newTask.dueDate);
-    taskDiv.remove()
+    taskDiv.remove();
     MenuUI.displayTasks("Task", newTask.name, newDate, null);
   }
   static submitTaskNameFromEdit(e) {
-    const taskDiv = document.querySelector('[data-type="Task"][data-key="' + e.target.dataset.key + '"]');
-    const nameInput = document.querySelector('.name-input[data-key="' + e.target.dataset.key + '"]');
-    const nameP = document.querySelector('.name-el[data-key="' + e.target.dataset.key + '"]');
+    const taskDiv = document.querySelector(
+      '[data-type="Task"][data-key="' + e.target.dataset.key + '"]'
+    );
+    const nameInput = document.querySelector(
+      '.name-input[data-key="' + e.target.dataset.key + '"]'
+    );
+    const nameP = document.querySelector(
+      '.name-el[data-key="' + e.target.dataset.key + '"]'
+    );
     nameP.classList.add("active");
     nameInput.classList.remove("active");
     const task = Storage.getTask(e.target.dataset.key);
