@@ -1,7 +1,7 @@
 import Task from "./task";
 import Storage from "./storage";
 import Project from "./projects";
-import { format, isValid, isToday, isThisWeek } from "date-fns";
+import { format, isValid, isToday, isThisWeek, add } from "date-fns";
 
 export default class MenuUI {
   static addMenuButtons() {
@@ -49,17 +49,14 @@ export default class MenuUI {
     myTask.innerHTML = "";
   }
   static removeProjTaskBtn(e) {
-    const delTask = document.querySelector(
-      `[data-key="${e.target.dataset.key}"]`
-    );
+    // const delTask = document.querySelector(
+    //   `[data-key="${e.target.dataset.key}"]`
+    // );
     const myTask = document.querySelector(
       `[data-task="${e.target.dataset.task}"]`
     );
-    let projToEdit = Storage.getProject(e.target.dataset.key);
-    console.log(projToEdit);
-    projToEdit.taskList.splice(e.target.dataset.index, 1);
-    console.log(projToEdit);
-    Storage.storeProj(projToEdit.name, projToEdit);
+
+    Storage.removeProjTask(e.target.dataset.key, e.target.dataset.task);
     MenuUI.projButton(e);
     myTask.innerHTML = "";
   }
@@ -88,12 +85,15 @@ export default class MenuUI {
     let taskName = document.getElementById("projTaskName");
     let dueDate = document.getElementById("projTaskDue");
     let projToEdit = Storage.getProject(e.target.dataset.key);
+    //vgfflet checkDate = Storage.formatDate(dueDate.value);
     let newTask = new Task(taskName.value, dueDate.value);
-    projToEdit.taskList.push([newTask.name, new Date(newTask.dueDate)]);
+
+    projToEdit.taskList.push([newTask.name, newTask.dueDate]);//problem here
     Storage.storeProj(projToEdit.name, projToEdit);
     taskForm.classList.remove("active");
     taskName.value = "";
     dueDate.value = "";
+    addProjTaskBtn.remove();
     MenuUI.projButton(e);
   }
 
@@ -161,6 +161,10 @@ export default class MenuUI {
     });
   }
   static projButton(e) {
+    let oldAddProjTaskBtn = document.querySelector(".addProjTaskBtn");
+    if (oldAddProjTaskBtn!== null) {
+      oldAddProjTaskBtn.remove();
+    }
     const proj = Storage.getProject(e.target.dataset.key);
     const listDiv = document.getElementById("listDiv");
     const projTitle = document.createElement("h3");
@@ -179,7 +183,7 @@ export default class MenuUI {
     listDiv.appendChild(projTitle);
     myInbox.appendChild(listDiv);
     MenuUI.listProjectList(proj);
-    listDiv.appendChild(addProjTaskBtn);
+    myInbox.appendChild(addProjTaskBtn);
   }
   static addProjTaskBtn(e) {
     const taskForm = document.getElementById("myProjForm");
@@ -223,10 +227,6 @@ export default class MenuUI {
     date.setAttribute("type", "date");
     myInbox.classList.add("active");
     listContainer.classList.add("active");
-    // nameName.classList.add("name-el", "active");
-    // dateDate.classList.add("date-el", "active");
-    // name.classList.add("name-input");
-    // date.classList.add("date-input");
     delTask.classList.add("delTask", "active");
     myTask.classList.add("myTask", "active");
     if (type === "Proj") {
@@ -236,12 +236,15 @@ export default class MenuUI {
       date.classList.add("date-input-proj");
       myTask.dataset.type = type;
       myTask.dataset.key = projName;
+      myTask.dataset.task = key;
       delTask.dataset.type = type;
       delTask.dataset.key = projName;
       //is this needed??
       delTask.dataset.task = key;
       nameName.addEventListener("click", MenuUI.editProjTaskName);
       dateDate.addEventListener("click", MenuUI.editProjTaskDate);
+      name.addEventListener("blur", MenuUI.submitProjTaskNameFromEdit);
+      date.addEventListener("blur", MenuUI.submitProjTaskDateFromEdit);
     } else if (type === "Task") {
       nameName.classList.add("name-el", "active");
       dateDate.classList.add("date-el", "active");
@@ -336,6 +339,7 @@ export default class MenuUI {
     );
     dateP.classList.add("active");
     dateInput.classList.remove("active");
+    
     const task = Storage.getTask(e.target.dataset.key);
     const newTask = new Task(task.name, dateInput.value);
     Storage.removeTask(e.target.dataset.key);
@@ -343,6 +347,32 @@ export default class MenuUI {
     let newDate = new Date(newTask.dueDate);
     taskDiv.remove();
     MenuUI.displayTasks("Task", newTask.name, newDate, null);
+  }
+  static submitProjTaskDateFromEdit(e) {
+    const taskDiv = document.querySelector(
+      '[data-type="Proj"][data-task="' + e.target.dataset.key + '"]'
+    );
+    const dateInput = document.querySelector(
+      '.date-input-proj[data-key="' + e.target.dataset.key + '"]'
+    );
+    const dateP = document.querySelector(
+      '.date-el-proj[data-key="' + e.target.dataset.key + '"]'
+    );
+    console.log(taskDiv.dataset.key);
+    dateP.classList.add("active");
+    dateInput.classList.remove("active");
+    // const task = Storage.getProjTask(e.target.dataset.key); //add function to Storage
+    let projName = taskDiv.dataset.key
+    console.log(projName);
+    Storage.removeProjTask(taskDiv.dataset.key, e.target.dataset.key);
+    let projToEdit = Storage.getProject(taskDiv.dataset.key);
+    const newTask = new Task(e.target.dataset.key, dateInput.value);
+    console.log(projToEdit);
+    let newDate = new Date(newTask.dueDate);
+    projToEdit.taskList.push([newTask.name, newDate]);
+    Storage.storeProj(projToEdit.name, projToEdit);
+    taskDiv.remove();
+    MenuUI.displayTasks("Proj", newTask.name, newDate, projToEdit.name);
   }
   static submitTaskNameFromEdit(e) {
     const taskDiv = document.querySelector(
@@ -357,10 +387,10 @@ export default class MenuUI {
     nameP.classList.add("active");
     nameInput.classList.remove("active");
     const task = Storage.getTask(e.target.dataset.key);
-    console.log(task);
+    Storage.removeTask(e.target.dataset.key);
     const newTask = new Task(nameInput.value, task.dueDate);
     console.log(newTask.dueDate);
-    Storage.removeTask(e.target.dataset.key);
+    
     Storage.storeTask(newTask.name, newTask);
     let newDate = new Date(newTask.dueDate);
     taskDiv.remove();

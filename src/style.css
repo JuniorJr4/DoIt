@@ -108,7 +108,9 @@ a {
 .date-input,
 .date-input-proj,
 .name-el,
-.date-el {
+.date-el,
+.name-el-proj,
+.date-el-proj {
   display: none;
 }
 
@@ -117,7 +119,9 @@ a {
 .date-input.active,
 .date-input-proj.active,
 .name-el.active,
-.date-el.active {
+.date-el.active,
+.name-el-proj.active,
+.date-el-proj.active {
   display: block;
 }
 

@@ -22,6 +22,18 @@ export default class Storage {
     let proj = JSON.parse(localStorage.getItem(className + "-" + id));
     return proj;
   }
+  static removeProjTask(proj, task) {
+    let projToEdit = Storage.getProject(proj);
+    console.log(projToEdit);
+    let indexToDelete;
+    projToEdit.taskList.forEach((el, index) => {
+      if (el[0] === task) {
+        indexToDelete = index;
+      }
+    });
+    projToEdit.taskList.splice(indexToDelete, 1);
+    Storage.storeProj(proj, projToEdit);
+  }
   static getTaskItems() {
     let items = [];
     for (let i = 0; i < localStorage.length; i++) {
