@@ -1,4 +1,4 @@
-import { format, isValid } from "date-fns";
+import { format, isValid, parse } from "date-fns";
 
 export default class Storage {
   static storeTask(id, task) {
@@ -9,7 +9,7 @@ export default class Storage {
     let className = "Task";
     let task = JSON.parse(localStorage.getItem(className + "-" + id));
     return task;
-    }
+  }
   static removeTask(key) {
     localStorage.removeItem("Task-" + key);
   }
@@ -22,6 +22,9 @@ export default class Storage {
     let proj = JSON.parse(localStorage.getItem(className + "-" + id));
     return proj;
   }
+  static removeProj(key) {
+    localStorage.removeItem("Proj-" + key);
+  }
   static removeProjTask(proj, task) {
     let projToEdit = Storage.getProject(proj);
     console.log(projToEdit);
@@ -32,7 +35,22 @@ export default class Storage {
       }
     });
     projToEdit.taskList.splice(indexToDelete, 1);
+    this.removeProj(proj);
     Storage.storeProj(proj, projToEdit);
+  }
+  static editProjTask(proj, taskName, newTaskName, newTaskDate) {
+    let projToEdit = Storage.getProject(proj);
+    let subArrayIndexToEdit = projToEdit.taskList.findIndex(
+      (subArray) => subArray[0] === taskName
+    );
+    let [name, dueDate] = projToEdit.taskList[subArrayIndexToEdit];
+    name = newTaskName;
+    dueDate = newTaskDate;
+    projToEdit.taskList[subArrayIndexToEdit] = [name, dueDate];
+    console.log(dueDate);
+    this.removeProj(proj);
+    Storage.storeProj(proj, projToEdit);
+    //return projToEdit;
   }
   static getTaskItems() {
     let items = [];
@@ -57,12 +75,31 @@ export default class Storage {
     return projects;
   }
   static formatDate(date) {
-    console.log(isValid(date));
     if (isValid(date)) {
       const formattedDate = format(date, "dd/MM/yyyy");
       return formattedDate;
-    } else {
-      return "No Due Date";
+    } else if (typeof date === "string") {
+      const dateObject = parse(date, 'dd/MM/yyyy', new Date());
+      console.log(dateObject);
+      if (isValid(dateObject)) {
+        const formattedDate = format(dateObject, "dd/MM/yyyy");
+        return formattedDate;
+      } else {
+        return "No Due Date";
+      }
     }
+    // console.log(isValid(date));
+    // if (!isValid(date)) {
+    //   let newDate = new Date(date);
+    //   if (!isValid(newDate)) {
+    //     return "No Due Date";
+    //   } else if (isValid(newDate)) {
+    //     const formattedDate = format(newDate, "dd/MM/yyyy");
+    //     return formattedDate;
+    //   }
+    // } else if (isValid(date)) {
+    //   const formattedDate = format(date, "dd/MM/yyyy");
+    //   return formattedDate;
+    // }
   }
 }
