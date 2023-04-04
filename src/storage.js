@@ -38,17 +38,31 @@ export default class Storage {
     this.removeProj(proj);
     Storage.storeProj(proj, projToEdit);
   }
-  static editProjTask(proj, taskName, newTaskName, newTaskDate) {
+  static editProjTaskName(proj, taskName, newTaskName) {
     let projToEdit = Storage.getProject(proj);
     let subArrayIndexToEdit = projToEdit.taskList.findIndex(
       (subArray) => subArray[0] === taskName
     );
     let [name, dueDate] = projToEdit.taskList[subArrayIndexToEdit];
     name = newTaskName;
+    //dueDate = newTaskDate;
+    projToEdit.taskList[subArrayIndexToEdit] = [name, dueDate];
+    console.log(dueDate);
+    Storage.removeProj(proj);
+    Storage.storeProj(proj, projToEdit);
+    //return projToEdit;
+  }
+  static editProjTaskDate(proj, taskName, newTaskDate) {
+    let projToEdit = Storage.getProject(proj);
+    let subArrayIndexToEdit = projToEdit.taskList.findIndex(
+      (subArray) => subArray[0] === taskName
+    );
+    let [name, dueDate] = projToEdit.taskList[subArrayIndexToEdit];
+    //name = newTaskName;
     dueDate = newTaskDate;
     projToEdit.taskList[subArrayIndexToEdit] = [name, dueDate];
     console.log(dueDate);
-    this.removeProj(proj);
+    Storage.removeProj(proj);
     Storage.storeProj(proj, projToEdit);
     //return projToEdit;
   }
@@ -74,32 +88,36 @@ export default class Storage {
     }
     return projects;
   }
+  static convertDateToISO(dateString) {
+    const parts = dateString.split("/");
+    const day = parts[0];
+    const month = parts[1];
+    const year = parts[2];
+
+    // Construct a new Date object using the day, month, and year components
+    const dateObject = new Date(year, month - 1, day);
+
+    // Use the toISOString() method to convert the Date object to ISO 8601 format
+    const isoDateString = dateObject.toISOString();
+
+    // Return the ISO 8601 date string
+    console.log(isValid(isoDateString));
+    return isoDateString;
+  }
   static formatDate(date) {
     if (isValid(date)) {
       const formattedDate = format(date, "dd/MM/yyyy");
       return formattedDate;
     } else if (typeof date === "string") {
-      const dateObject = parse(date, 'dd/MM/yyyy', new Date());
+      const dateObject = parse(date, "dd/MM/yyyy", new Date());
       console.log(dateObject);
       if (isValid(dateObject)) {
         const formattedDate = format(dateObject, "dd/MM/yyyy");
+        console.log(formattedDate);
         return formattedDate;
       } else {
         return "No Due Date";
       }
     }
-    // console.log(isValid(date));
-    // if (!isValid(date)) {
-    //   let newDate = new Date(date);
-    //   if (!isValid(newDate)) {
-    //     return "No Due Date";
-    //   } else if (isValid(newDate)) {
-    //     const formattedDate = format(newDate, "dd/MM/yyyy");
-    //     return formattedDate;
-    //   }
-    // } else if (isValid(date)) {
-    //   const formattedDate = format(date, "dd/MM/yyyy");
-    //   return formattedDate;
-    // }
   }
 }

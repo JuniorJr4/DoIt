@@ -72,6 +72,7 @@ export default class MenuUI {
     const taskForm = document.getElementById("myForm");
     let taskName = document.getElementById("name");
     let dueDate = document.getElementById("due");
+    console.log(dueDate.value);
     let newTask = new Task(taskName.value, dueDate.value);
     Storage.storeTask(taskName.value, newTask);
     taskName.value = "";
@@ -87,7 +88,7 @@ export default class MenuUI {
     let projToEdit = Storage.getProject(e.target.dataset.key);
     //let checkDate = Storage.formatDate(dueDate.value);
     let newTask = new Task(taskName.value, dueDate.value);
-
+    console.log(typeof(dueDate.value));
     projToEdit.taskList.push([newTask.name, newTask.dueDate]); //problem here
     Storage.storeProj(projToEdit.name, projToEdit);
     taskForm.classList.remove("active");
@@ -103,6 +104,7 @@ export default class MenuUI {
     Storage.storeProj(projName.value, newProj);
     // console.log(Storage.getProject(projName.value));
     MenuUI.createProjElement(newProj);
+    document.querySelector('[data-type="Proj"][data-key="' + newProj.name + '"]').click();
     projName.value = "";
   }
 
@@ -229,7 +231,9 @@ export default class MenuUI {
     listContainer.classList.add("active");
     delTask.classList.add("delTask", "active");
     myTask.classList.add("myTask", "active");
+    console.log(value);
     let newDate = Storage.formatDate(value);
+    console.log(newDate);
     if (type === "Proj") {
       nameName.classList.add("name-el-proj", "active");
       dateDate.classList.add("date-el-proj", "active");
@@ -367,13 +371,13 @@ export default class MenuUI {
     let projName = taskDiv.dataset.key;
     let taskName = e.target.dataset.key;
     console.log(projName, e.target.dataset.key);
-    let projDate = taskDiv.dataset.date;
-    const newTask = new Task(taskName, dateInput.value);
-    Storage.editProjTask(projName, taskName, newTask.name, newTask.dueDate);
-    let newDate = new Date(newTask.dueDate);
+    let projDate = dateInput.value;
+    //const newTask = new Task(taskName, dateInput.value);
+    Storage.editProjTaskDate(projName, taskName, projDate);
+    let newDate = new Date(projDate);
     
     taskDiv.remove();
-    MenuUI.displayTasks("Proj", newTask.name, newDate, projName);
+    MenuUI.displayTasks("Proj", taskName, newDate, projName);
   }
   static submitTaskNameFromEdit(e) {
     const taskDiv = document.querySelector(
@@ -408,18 +412,20 @@ export default class MenuUI {
       '.name-el-proj[data-key="' + e.target.dataset.key + '"]'
     );
     let projName = taskDiv.dataset.key;
-    let taskName = e.target.dataset.key; // needed?
-    let taskDate = taskDiv.dataset.date;
+    let taskName = e.target.dataset.key;
+    let newTaskName = nameInput.value; // needed?
+    let taskDate = new Date(Storage.convertDateToISO(taskDiv.dataset.date));
     console.log(taskDate, taskName);
     nameP.classList.add("active");
     nameInput.classList.remove("active");
-    let newDate = new Date(taskDate);
-    console.log(newDate);
-    const newTask = new Task(nameInput.value, taskDate);
-    console.log(typeof(taskDate), newTask.dueDate);
-    Storage.editProjTask(projName, taskName, newTask.name, newTask.dueDate);
+    //let newDate = new Date(taskDate);
+    //console.log(newDate);
+    //const newTask = new Task(nameInput.value, taskDate);
+    //console.log(typeof(taskDate), newTask.dueDate);
+    Storage.editProjTaskName(projName, taskName, nameInput.value);
     taskDiv.remove();
-    MenuUI.displayTasks("Proj", newTask.name, newTask.dueDate, projName);
+    //MenuUI.projButton(e);
+    MenuUI.displayTasks("Proj", newTaskName, taskDate, projName);
   }
 
   static displayProjects(type, key) {
