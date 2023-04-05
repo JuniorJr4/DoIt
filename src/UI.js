@@ -150,6 +150,7 @@ export default class MenuUI {
     projectName.dataset.key = el.name;
     deleteProj.textContent = " X ";
     deleteProj.dataset.key = el.name;
+    deleteProj.classList.add("delete-proj-btn");
     proj.addEventListener("click", this.projButton);
     deleteProj.addEventListener("click", MenuUI.removeProjBtn);
     proj.appendChild(projectName);

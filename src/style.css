@@ -1,5 +1,7 @@
 :root {
-  --red: ;
+  --bright-blue: #007bff ;
+  --dark-gray: #6c757d;
+
 }
 
 @font-face {
@@ -32,7 +34,7 @@ img {
   left: 0;
   bottom: 0;
   width: 200px;
-  background-color: #eee;
+  background-color: var(--bright-blue);
 }
 
 li,
@@ -42,9 +44,27 @@ a {
 }
 
 .DoIt {
-  padding-left: 40px;
+  padding-left: 20px;
 }
-
+button {
+  background-color: var(--dark-gray);
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.delete-proj-btn {
+  padding: 10px 17px 10px 10px;
+}
+.delTask {
+  padding: 7px 20px 7px 10px;
+}
 .content {
   position: relative;
   left: 200px;
@@ -134,11 +154,13 @@ a {
 }
 .proj-list {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  max-width: 135px;
+  grid-template-columns: 1fr 26px;
 }
 .proj-list > button {
   display: flex;
   justify-content: space-between;
+  text-align: center;
 }
 
 .addProjTaskBtn.inactive {
