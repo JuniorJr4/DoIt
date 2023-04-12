@@ -1,6 +1,9 @@
 :root {
   --bright-blue: #007bff ;
-  --dark-gray: #6c757d;
+  --sea-blue: #19A7CE;
+  --darker-blue: #146C94;
+  --light-gray: #F6F1F1;
+  --green: #29aa29;
 
 }
 
@@ -22,6 +25,9 @@
 
 body {
   font-family: "Roboto";
+  background-color: var(--sea-blue);
+  height: fit-content;
+  overflow: auto;
 }
 
 img {
@@ -34,7 +40,9 @@ img {
   left: 0;
   bottom: 0;
   width: 200px;
-  background-color: var(--bright-blue);
+  background-color: var(--darker-blue);
+  height: 
+  
 }
 
 li,
@@ -47,9 +55,9 @@ a {
   padding-left: 20px;
 }
 button {
-  background-color: var(--dark-gray);
-  border: none;
-  color: white;
+  background-color: var(--light-gray);
+  border: 2px solid black;
+  color: black;
   padding: 10px 20px;
   text-align: center;
   text-decoration: none;
@@ -59,11 +67,30 @@ button {
   cursor: pointer;
   border-radius: 5px;
 }
+
+input {
+  border: 2px solid black;
+  border-radius: 4px;
+  font-size: 16px;
+  height: 28px;
+  font-family: "Roboto";
+}
+
+.myInbox.active {
+  width:fit-content;
+}
 .delete-proj-btn {
-  padding: 10px 17px 10px 10px;
+  padding: 10px 20px 10px 10px;
+  background-color: black;
+  color: var(--light-gray);
+  
+  /* border: 2px solid var(--light-gray); */
 }
 .delTask {
   padding: 7px 20px 7px 10px;
+  padding: 10px 20px 10px 10px;
+  background-color: black;
+  color: var(--light-gray);
 }
 .content {
   position: relative;
@@ -101,10 +128,17 @@ button {
   display: none;
 }
 
-.myTask {
+.myTask.active {
   display: grid;
-  grid-template-columns: 1fr 1fr 26px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 35px);
+  grid-gap: 10px;
   align-items: center;
+  outline: 2px solid black;
+  border-radius: 3px;
+  width: auto;
+  padding: 0 5px;
+  background-color: var(--light-gray);
+  margin: 10px 0;
 }
 
 #listDiv {
@@ -178,3 +212,13 @@ button {
   left: 200px;
   width: fit-content;
 }
+
+/* .name-el-proj.active, .name-input-proj.active, .date-el-proj.active, .date-input-proj.active {
+  ;
+} */
+
+/* .myTask.active {
+  outline: 2px solid var(--dark-gray);
+  border-radius: 3px;
+  width: 100%;
+} */
