@@ -1,4 +1,4 @@
-import { format, isValid, parse } from "date-fns";
+import { format, isValid, parseISO } from "date-fns";
 
 export default class Storage {
   static storeTask(id, task) {
@@ -75,6 +75,7 @@ export default class Storage {
         items.push(value);
       }
     }
+    console.log(items);
     return items;
   }
   static getAllProj() {
@@ -88,36 +89,40 @@ export default class Storage {
     }
     return projects;
   }
-  static convertDateToISO(dateString) {
-    const parts = dateString.split("/");
-    const day = parts[0];
-    const month = parts[1];
-    const year = parts[2];
-
-    // Construct a new Date object using the day, month, and year components
-    const dateObject = new Date(year, month - 1, day);
-
-    // Use the toISOString() method to convert the Date object to ISO 8601 format
-    const isoDateString = dateObject.toISOString();
-
-    // Return the ISO 8601 date string
-    console.log(isValid(isoDateString));
-    return isoDateString;
+  static checkIfTaskExists(taskName) {
+    return this.getTaskItems().some((task) => task.name === taskName);
+  }
+  static checkIfProjTaskExists(project, taskName) {
+    return project.taskList.some(task => task[0] === taskName);
   }
   static formatDate(date) {
-    if (isValid(date)) {
-      const formattedDate = format(date, "dd/MM/yyyy");
-      return formattedDate;
-    } else if (typeof date === "string") {
-      const dateObject = parse(date, "dd/MM/yyyy", new Date());
-      console.log(dateObject);
-      if (isValid(dateObject)) {
-        const formattedDate = format(dateObject, "dd/MM/yyyy");
-        console.log(formattedDate);
-        return formattedDate;
-      } else {
-        return "No Due Date";
-      }
+    // If input is a string, convert it to a Date object
+    if (typeof date === "string") {
+      date = parseISO(date);
     }
+
+    // Check if the input is a valid date object
+    if (!isValid(date)) {
+      return "No Due Date";
+    }
+
+    // Check if the date is already in the desired format
+    const formattedDate = format(date, "dd/MM/yyyy");
+    return formattedDate;
+    // if (isValid(date)) {
+    //   const formattedDate = format(date, "dd/MM/yyyy");
+    //   console.log(formattedDate);
+    //   return formattedDate;
+    // } else if (typeof date === "string") {
+    //   const dateObject = parse(date, "dd/MM/yyyy", new Date());
+    //   console.log(dateObject);
+    //   if (isValid(dateObject)) {
+    //     const formattedDate = format(dateObject, "dd/MM/yyyy");
+    //     console.log(formattedDate);
+    //     return formattedDate;
+    //   } else {
+    //     return "No Due Date";
+    //   }
+    // }
   }
 }

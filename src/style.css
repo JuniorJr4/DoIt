@@ -41,8 +41,11 @@ img {
   bottom: 0;
   width: 200px;
   background-color: var(--darker-blue);
-  height: 
-  
+  height: 100vh;
+}
+
+button:not(.delete-proj-btn, .delTask) {
+  padding: 5px 15px;
 }
 
 li,
@@ -58,7 +61,7 @@ button {
   background-color: var(--light-gray);
   border: 2px solid black;
   color: black;
-  padding: 10px 20px;
+  /* padding: 10px 20px; */
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -76,19 +79,37 @@ input {
   font-family: "Roboto";
 }
 
+.proj-list {
+  display: grid;
+  max-width: 135px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 35px);
+}
+/* .proj-list [data-type="Proj"] {
+  display: flex;
+  padding: 5px 15px;
+  text-align: center;
+} */
+/* div.Proj {
+
+} */
 .myInbox.active {
   width:fit-content;
 }
 .delete-proj-btn {
-  padding: 10px 20px 10px 10px;
+  display:  flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 5px 5px 5px 5px;
   background-color: black;
   color: var(--light-gray);
+  border: none;
   
   /* border: 2px solid var(--light-gray); */
 }
 .delTask {
-  padding: 7px 20px 7px 10px;
-  padding: 10px 20px 10px 10px;
+  padding: 5px 5px 5px 5px;
   background-color: black;
   color: var(--light-gray);
 }
@@ -186,16 +207,7 @@ input {
   left: 200px;
   width: fit-content; */
 }
-.proj-list {
-  display: grid;
-  max-width: 135px;
-  grid-template-columns: 1fr 26px;
-}
-.proj-list > button {
-  display: flex;
-  justify-content: space-between;
-  text-align: center;
-}
+
 
 .addProjTaskBtn.inactive {
   display: none;

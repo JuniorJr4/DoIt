@@ -29,7 +29,7 @@ export default class MenuUI {
 
   static addTaskBtn() {
     const taskForm = document.getElementById("myForm");
-    MenuUI.removeActive();
+    //MenuUI.removeActive();
     taskForm.classList.add("active");
     const taskSubmit = document.getElementById("submitBtn");
     taskSubmit.addEventListener("click", MenuUI.submitTaskBtn);
@@ -43,10 +43,10 @@ export default class MenuUI {
     //   `[data-key="${e.target.dataset.key}"]`
     // );
     const myTask = document.querySelector(
-      `[data-key="${e.target.dataset.key}"]`
+      `.myTask[data-key="${e.target.dataset.key}"]`
     );
     localStorage.removeItem("Task-" + e.target.dataset.key);
-    myTask.innerHTML = "";
+    myTask.remove();
   }
   static removeProjTaskBtn(e) {
     // const delTask = document.querySelector(
@@ -72,30 +72,44 @@ export default class MenuUI {
     const taskForm = document.getElementById("myForm");
     let taskName = document.getElementById("name");
     let dueDate = document.getElementById("due");
-    console.log(dueDate.value);
     let newTask = new Task(taskName.value, dueDate.value);
-    Storage.storeTask(taskName.value, newTask);
-    taskName.value = "";
-    dueDate.value = "";
-    taskForm.classList.remove("active");
+    console.log(Storage.checkIfTaskExists(newTask.name), newTask.name);
+    if (Storage.checkIfTaskExists(taskName.value)) {
+      alert(
+        `A Task by the name of "${taskName.value}" already exists, choose another name.`
+      );
+    } else {
+      Storage.storeTask(taskName.value, newTask);
+      taskName.value = "";
+      dueDate.value = "";
+      taskForm.classList.remove("active");
+      MenuUI.inboxButton();
+    }
   }
   static submitProjTaskBtn(e) {
     const taskForm = document.getElementById("myProjForm");
     const addProjTaskBtn = document.querySelector(".addProjTaskBtn");
-    addProjTaskBtn.classList.remove("inactive");
+
     let taskName = document.getElementById("projTaskName");
     let dueDate = document.getElementById("projTaskDue");
     let projToEdit = Storage.getProject(e.target.dataset.key);
-    //let checkDate = Storage.formatDate(dueDate.value);
-    let newTask = new Task(taskName.value, dueDate.value);
-    console.log(typeof(dueDate.value));
-    projToEdit.taskList.push([newTask.name, newTask.dueDate]); //problem here
-    Storage.storeProj(projToEdit.name, projToEdit);
-    taskForm.classList.remove("active");
-    taskName.value = "";
-    dueDate.value = "";
-    addProjTaskBtn.remove();
-    MenuUI.projButton(e);
+    if (Storage.checkIfProjTaskExists(projToEdit, taskName.value)) {
+      alert(
+        `A Task by the name of "${taskName.value}" already exists, choose another name.`
+      );
+    } else {
+      addProjTaskBtn.classList.remove("inactive");
+      let checkDate = Storage.formatDate(dueDate.value);
+      let newTask = new Task(taskName.value, checkDate);
+      console.log(checkDate);
+      projToEdit.taskList.push([newTask.name, newTask.dueDate]); //problem here
+      Storage.storeProj(projToEdit.name, projToEdit);
+      taskForm.classList.remove("active");
+      taskName.value = "";
+      dueDate.value = "";
+      addProjTaskBtn.remove();
+      MenuUI.projButton(e);
+    }
   }
 
   static submitProj() {
@@ -104,7 +118,9 @@ export default class MenuUI {
     Storage.storeProj(projName.value, newProj);
     // console.log(Storage.getProject(projName.value));
     MenuUI.createProjElement(newProj);
-    document.querySelector('[data-type="Proj"][data-key="' + newProj.name + '"]').click();
+    document
+      .querySelector('[data-type="Proj"][data-key="' + newProj.name + '"]')
+      .click();
     projName.value = "";
   }
 
@@ -113,7 +129,7 @@ export default class MenuUI {
     const taskTitle = document.createElement("h3");
     MenuUI.removeActive();
     taskTitle.classList.add("task-title", "active");
-    taskTitle.textContent = "DoIt! List";
+    taskTitle.textContent = "Your Inbox";
     listDiv.innerHTML = "";
     listDiv.appendChild(taskTitle);
     let items = Storage.getTaskItems();
@@ -243,7 +259,7 @@ export default class MenuUI {
       myTask.dataset.type = type;
       myTask.dataset.key = projName;
       myTask.dataset.task = key;
-      myTask.dataset.date = newDate
+      myTask.dataset.date = newDate;
       delTask.dataset.type = type;
       delTask.dataset.key = projName;
       //is this needed??
@@ -267,7 +283,7 @@ export default class MenuUI {
       date.addEventListener("blur", MenuUI.submitTaskDateFromEdit);
     }
     delTask.textContent = "X";
-    
+
     console.log(newDate);
     nameName.textContent = key;
     name.setAttribute("value", key);
@@ -376,7 +392,7 @@ export default class MenuUI {
     //const newTask = new Task(taskName, dateInput.value);
     Storage.editProjTaskDate(projName, taskName, projDate);
     let newDate = new Date(projDate);
-    
+
     taskDiv.remove();
     MenuUI.displayTasks("Proj", taskName, newDate, projName);
   }
@@ -453,7 +469,7 @@ export default class MenuUI {
     const listDiv = document.getElementById("listDiv");
     const taskTitle = document.createElement("h3");
     taskTitle.classList.add("task-title", "active");
-    taskTitle.textContent = "DoIt! List";
+    taskTitle.textContent = "Today's Tasks";
     MenuUI.removeActive();
     myInbox.classList.add("active");
     listDiv.innerHTML = "";
@@ -475,7 +491,7 @@ export default class MenuUI {
     const listDiv = document.getElementById("listDiv");
     const taskTitle = document.createElement("h3");
     taskTitle.classList.add("task-title", "active");
-    taskTitle.textContent = "DoIt! List";
+    taskTitle.textContent = "This Week's Tasks";
     MenuUI.removeActive();
     myInbox.classList.add("active");
     let today = new Date();
