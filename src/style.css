@@ -1,10 +1,9 @@
 :root {
-  --bright-blue: #007bff ;
-  --sea-blue: #19A7CE;
-  --darker-blue: #146C94;
-  --light-gray: #F6F1F1;
+  --bright-blue: #007bff;
+  --sea-blue: #19a7ce;
+  --darker-blue: #146c94;
+  --light-gray: #f6f1f1;
   --green: #29aa29;
-
 }
 
 @font-face {
@@ -28,20 +27,52 @@ body {
   background-color: var(--sea-blue);
   height: fit-content;
   overflow: auto;
+  margin: 0;
+}
+h1, h3 {
+   margin: 0;
 }
 
 img {
   height: 12px;
 }
 
+.header {
+  height: 100px;
+  background-color: var(--green);
+}
+.title { 
+  margin: 0;
+}
+.page-container {
+  display: flex;
+  
+  
+}
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100vh;
+  
+}
 .side {
-  position: fixed;
+  display: flex;
+  flex-direction: column;
+  /* position: fixed;
   top: 0;
   left: 0;
-  bottom: 0;
-  width: 200px;
+  bottom: 0; */
+  flex: 1 0 33%;
+  /* width: 200px; */
   background-color: var(--darker-blue);
   height: 100vh;
+  padding: 25px 25px 0 0;
+}
+.content {
+  display: flex;
+  flex: 0 0 67%;
+  padding: 25px 0 0 25px;
 }
 
 button:not(.delete-proj-btn, .delTask) {
@@ -70,6 +101,18 @@ button {
   cursor: pointer;
   border-radius: 5px;
 }
+button:not(.delete-proj-btn, .delTask, .task-cancel, .proj-cancel, #projSubmit, #submitBtn):hover {
+  background-color: var(--bright-blue);
+  /* color: var(--light-gray); */
+}
+.delete-proj-btn:hover,
+.delTask:hover {
+  background-color: var(--light-gray);
+  color: black;
+}
+.myTask.active:hover, .task-cancel:hover, .proj-cancel:hover, #projSubmit:hover, #submitBtn:hover {
+  background-color: var(--darker-blue);
+}
 
 input {
   border: 2px solid black;
@@ -93,10 +136,10 @@ input {
 
 } */
 .myInbox.active {
-  width:fit-content;
+  width: fit-content;
 }
 .delete-proj-btn {
-  display:  flex;
+  display: flex;
   justify-content: center;
   align-items: center;
   font-size: 10px;
@@ -105,7 +148,7 @@ input {
   background-color: black;
   color: var(--light-gray);
   border: none;
-  
+
   /* border: 2px solid var(--light-gray); */
 }
 .delTask {
@@ -113,11 +156,11 @@ input {
   background-color: black;
   color: var(--light-gray);
 }
-.content {
-  position: relative;
-  left: 200px;
+/* .content {
+  
+  
   width: fit-content;
-}
+} */
 
 .new-task {
   display: none;
@@ -140,9 +183,9 @@ input {
 
 .new-proj-task.active {
   display: block;
-  position: relative;
+  /* position: relative;
   left: 200px;
-  width: fit-content;
+  width: fit-content; */
 }
 
 .task-info {
@@ -169,12 +212,6 @@ input {
 #listDiv.active {
   display: block;
 }
-
-/* #listDiv {
-  position: relative;
-  left: 200px;
-  width: fit-content; 
-} */
 
 .myInbox,
 #myProjForm,
@@ -208,12 +245,11 @@ input {
   width: fit-content; */
 }
 
-
 .addProjTaskBtn.inactive {
   display: none;
 }
 
-#project-form {
+/* #project-form {
   position: relative;
   left: 200px;
   width: fit-content;
@@ -223,7 +259,7 @@ input {
   position: relative;
   left: 200px;
   width: fit-content;
-}
+} */
 
 /* .name-el-proj.active, .name-input-proj.active, .date-el-proj.active, .date-input-proj.active {
   ;

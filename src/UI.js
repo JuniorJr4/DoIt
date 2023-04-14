@@ -29,10 +29,20 @@ export default class MenuUI {
 
   static addTaskBtn() {
     const taskForm = document.getElementById("myForm");
-    //MenuUI.removeActive();
+    MenuUI.removeActive();
     taskForm.classList.add("active");
     const taskSubmit = document.getElementById("submitBtn");
+    const taskClose = document.querySelector(".task-cancel");
+    taskClose.addEventListener("click", MenuUI.closeTaskForm);
     taskSubmit.addEventListener("click", MenuUI.submitTaskBtn);
+  }
+  static closeTaskForm() {
+    const taskForm = document.getElementById("myForm");
+    const taskName = document.getElementById("name");
+    const dueDate = document.getElementById("due");
+    taskForm.classList.remove("active");
+    taskName.value = "";
+    dueDate.value = "";
   }
   static clearStorageBtn() {
     localStorage.clear();
@@ -70,8 +80,8 @@ export default class MenuUI {
   }
   static submitTaskBtn() {
     const taskForm = document.getElementById("myForm");
-    let taskName = document.getElementById("name");
-    let dueDate = document.getElementById("due");
+    const taskName = document.getElementById("name");
+    const dueDate = document.getElementById("due");
     let newTask = new Task(taskName.value, dueDate.value);
     console.log(Storage.checkIfTaskExists(newTask.name), newTask.name);
     if (Storage.checkIfTaskExists(taskName.value)) {
@@ -468,11 +478,14 @@ export default class MenuUI {
     const myInbox = document.querySelector(".myInbox");
     const listDiv = document.getElementById("listDiv");
     const taskTitle = document.createElement("h3");
-    taskTitle.classList.add("task-title", "active");
+    
     taskTitle.textContent = "Today's Tasks";
     MenuUI.removeActive();
-    myInbox.classList.add("active");
+    
     listDiv.innerHTML = "";
+    taskTitle.classList.add("task-title", "active");
+    myInbox.classList.add("active");
+    listDiv.classList.add("active");
     listDiv.appendChild(taskTitle);
     let items = Storage.getTaskItems();
     items.forEach((el) => {
@@ -490,9 +503,11 @@ export default class MenuUI {
     const myInbox = document.querySelector(".myInbox");
     const listDiv = document.getElementById("listDiv");
     const taskTitle = document.createElement("h3");
-    taskTitle.classList.add("task-title", "active");
+    
     taskTitle.textContent = "This Week's Tasks";
     MenuUI.removeActive();
+    taskTitle.classList.add("task-title", "active");
+    listDiv.classList.add("active");
     myInbox.classList.add("active");
     let today = new Date();
     listDiv.innerHTML = "";
