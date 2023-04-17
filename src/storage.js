@@ -97,8 +97,10 @@ export default class Storage {
   }
   static formatDate(date) {
     // If input is a string, convert it to a Date object
+    console.log(new Date(date));
     if (typeof date === "string") {
-      date = parseISO(date);
+      date =new Date(date);
+      console.log(date);
     }
 
     // Check if the input is a valid date object

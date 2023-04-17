@@ -28,9 +28,12 @@ body {
   height: fit-content;
   overflow: auto;
   margin: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
 }
-h1, h3 {
-   margin: 0;
+h1,
+h3 {
+  margin: 0;
 }
 
 img {
@@ -39,22 +42,65 @@ img {
 
 .header {
   height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   background-color: var(--green);
-}
-.title { 
   margin: 0;
+  padding: 0;
+}
+.menu-btn {
+  display: none;
+  width: 30px;
+  background-color: var(--green);
+  border: none;
+  margin-left: 18px;
+  padding: 5px 0 0 0;
+}
+img {
+  height: 24px;
+}
+footer {
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  font-weight: 700;
+  align-items: center;
+  background-color: var(--green);
+  border-top: 2px solid black;
+}
+.title {
+  margin: 0;
+  padding-left: 20px;
 }
 .page-container {
   display: flex;
-  
-  
+  /* border: 2px solid black; */
 }
 .sidebar {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100vh;
-  
+  height: auto;
+  border-width: 2px 2px 0 0;
+  border-style: solid;
+  border-color: black;
+}
+
+@media only screen and (max-width: 600px) {
+  .sidebar {
+    display: none;
+  }
+  .menu-btn {
+    display: block;
+  }
+  .content.sidebar-open  {
+    display: none;
+  }
+  .sidebar.sidebar-open {
+    display: block;
+    width: 100vw
+  }
 }
 .side {
   display: flex;
@@ -71,11 +117,15 @@ img {
 }
 .content {
   display: flex;
-  flex: 0 0 67%;
+  flex: 9999 0 67%;
   padding: 25px 0 0 25px;
+
+  border-width: 2px 0 0 0;
+  border-style: solid;
+  border-color: black;
 }
 
-button:not(.delete-proj-btn, .delTask) {
+button:not(.delete-proj-btn, .delTask, .menu-btn) {
   padding: 5px 15px;
 }
 
@@ -88,7 +138,7 @@ a {
 .DoIt {
   padding-left: 20px;
 }
-button {
+button:not(.menu-btn) {
   background-color: var(--light-gray);
   border: 2px solid black;
   color: black;
@@ -101,7 +151,15 @@ button {
   cursor: pointer;
   border-radius: 5px;
 }
-button:not(.delete-proj-btn, .delTask, .task-cancel, .proj-cancel, #projSubmit, #submitBtn):hover {
+button:not(
+    .delete-proj-btn,
+    .delTask,
+    .task-cancel,
+    .proj-cancel,
+    #projSubmit,
+    #submitBtn,
+    .menu-btn
+  ):hover {
   background-color: var(--bright-blue);
   /* color: var(--light-gray); */
 }
@@ -110,7 +168,11 @@ button:not(.delete-proj-btn, .delTask, .task-cancel, .proj-cancel, #projSubmit, 
   background-color: var(--light-gray);
   color: black;
 }
-.myTask.active:hover, .task-cancel:hover, .proj-cancel:hover, #projSubmit:hover, #submitBtn:hover {
+.myTask.active:hover,
+.task-cancel:hover,
+.proj-cancel:hover,
+#projSubmit:hover,
+#submitBtn:hover {
   background-color: var(--darker-blue);
 }
 

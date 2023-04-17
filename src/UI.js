@@ -13,6 +13,8 @@ export default class MenuUI {
     const projects = document.getElementById("projects");
     const addProject = document.getElementById("addProject");
     const projSubmit = document.getElementById("projSubmit");
+    const menuBtn = document.querySelector(".menu-btn");
+    menuBtn.addEventListener("click", MenuUI.toggleMenu);
     projects.addEventListener("click", this.projectInbox);
     projSubmit.addEventListener("click", MenuUI.submitProj);
     taskBtn.addEventListener("click", MenuUI.addTaskBtn);
@@ -26,7 +28,12 @@ export default class MenuUI {
     let projList = Storage.getAllProj();
     this.listProjects(projList);
   }
-
+  static toggleMenu() {
+    const content = document.querySelector(".content");
+    const sidebar = document.querySelector(".sidebar");
+    content.classList.toggle("sidebar-open");
+    sidebar.classList.toggle("sidebar-open");
+  }
   static addTaskBtn() {
     const taskForm = document.getElementById("myForm");
     MenuUI.removeActive();
@@ -137,9 +144,13 @@ export default class MenuUI {
   static inboxButton() {
     const listDiv = document.getElementById("listDiv");
     const taskTitle = document.createElement("h3");
+    const addProjTaskBtn = document.querySelector(".addProjTaskBtn");
     MenuUI.removeActive();
     taskTitle.classList.add("task-title", "active");
     taskTitle.textContent = "Your Inbox";
+    if (addProjTaskBtn !== null) {
+      addProjTaskBtn.remove();
+    }
     listDiv.innerHTML = "";
     listDiv.appendChild(taskTitle);
     let items = Storage.getTaskItems();
@@ -416,17 +427,27 @@ export default class MenuUI {
     const nameP = document.querySelector(
       '.name-el[data-key="' + e.target.dataset.key + '"]'
     );
-    nameP.classList.add("active");
-    nameInput.classList.remove("active");
-    const task = Storage.getTask(e.target.dataset.key);
-    Storage.removeTask(e.target.dataset.key);
-    const newTask = new Task(nameInput.value, task.dueDate);
-    console.log(newTask.dueDate);
+    if (Storage.checkIfTaskExists(nameInput.value)) {
+      alert(
+        `A Task by the name of "${nameInput.value}" already exists, choose another name.`
+      );
+      nameP.classList.add("active");
+      nameInput.classList.remove("active");
+      nameInput.value = nameP.dataset.key;
+    } else {
+      nameP.classList.add("active");
+      nameInput.classList.remove("active");
 
-    Storage.storeTask(newTask.name, newTask);
-    let newDate = new Date(newTask.dueDate);
-    taskDiv.remove();
-    MenuUI.displayTasks("Task", newTask.name, newDate, "Tasks");
+      const task = Storage.getTask(e.target.dataset.key);
+      Storage.removeTask(e.target.dataset.key);
+      const newTask = new Task(nameInput.value, task.dueDate);
+      console.log(newTask.dueDate);
+
+      Storage.storeTask(newTask.name, newTask);
+      let newDate = new Date(newTask.dueDate);
+      taskDiv.remove();
+      MenuUI.displayTasks("Task", newTask.name, newDate, "Tasks");
+    }
   }
   static submitProjTaskNameFromEdit(e) {
     const taskDiv = document.querySelector(
@@ -438,21 +459,31 @@ export default class MenuUI {
     const nameP = document.querySelector(
       '.name-el-proj[data-key="' + e.target.dataset.key + '"]'
     );
-    let projName = taskDiv.dataset.key;
-    let taskName = e.target.dataset.key;
-    let newTaskName = nameInput.value; // needed?
-    let taskDate = new Date(Storage.convertDateToISO(taskDiv.dataset.date));
-    console.log(taskDate, taskName);
-    nameP.classList.add("active");
-    nameInput.classList.remove("active");
-    //let newDate = new Date(taskDate);
-    //console.log(newDate);
-    //const newTask = new Task(nameInput.value, taskDate);
-    //console.log(typeof(taskDate), newTask.dueDate);
-    Storage.editProjTaskName(projName, taskName, nameInput.value);
-    taskDiv.remove();
-    //MenuUI.projButton(e);
-    MenuUI.displayTasks("Proj", newTaskName, taskDate, projName);
+    let projToEdit = Storage.getProject(taskDiv.dataset.key);
+    if (Storage.checkIfProjTaskExists(projToEdit, nameInput.value)) {
+      alert(
+        `A Task by the name of "${nameInput.value}" already exists, choose another name.`
+      );
+      nameP.classList.add("active");
+      nameInput.classList.remove("active");
+      nameInput.value = nameP.dataset.key;
+    } else {
+      let projName = taskDiv.dataset.key;
+      let taskName = e.target.dataset.key;
+      let newTaskName = nameInput.value; // needed?
+      let taskDate = taskDiv.dataset.date;
+      console.log(taskDate, taskName);
+      nameP.classList.add("active");
+      nameInput.classList.remove("active");
+      //let newDate = new Date(taskDate);
+      //console.log(newDate);
+      //const newTask = new Task(nameInput.value, taskDate);
+      //console.log(typeof(taskDate), newTask.dueDate);
+      Storage.editProjTaskName(projName, taskName, nameInput.value);
+      taskDiv.remove();
+      //MenuUI.projButton(e);
+      MenuUI.displayTasks("Proj", newTaskName, taskDate, projName);
+    }
   }
 
   static displayProjects(type, key) {
@@ -478,10 +509,12 @@ export default class MenuUI {
     const myInbox = document.querySelector(".myInbox");
     const listDiv = document.getElementById("listDiv");
     const taskTitle = document.createElement("h3");
-    
+    const addProjTaskBtn = document.querySelector(".addProjTaskBtn");
     taskTitle.textContent = "Today's Tasks";
     MenuUI.removeActive();
-    
+    if (addProjTaskBtn !== null) {
+      addProjTaskBtn.remove();
+    }
     listDiv.innerHTML = "";
     taskTitle.classList.add("task-title", "active");
     myInbox.classList.add("active");
@@ -503,13 +536,16 @@ export default class MenuUI {
     const myInbox = document.querySelector(".myInbox");
     const listDiv = document.getElementById("listDiv");
     const taskTitle = document.createElement("h3");
-    
+    const addProjTaskBtn = document.querySelector(".addProjTaskBtn");
     taskTitle.textContent = "This Week's Tasks";
     MenuUI.removeActive();
     taskTitle.classList.add("task-title", "active");
     listDiv.classList.add("active");
     myInbox.classList.add("active");
     let today = new Date();
+    if (addProjTaskBtn !== null) {
+      addProjTaskBtn.remove();
+    }
     listDiv.innerHTML = "";
     listDiv.appendChild(taskTitle);
     let items = Storage.getTaskItems();
