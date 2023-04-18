@@ -1,9 +1,9 @@
 :root {
-  --bright-blue: #007bff;
+  --bright-blue: #7388ff;
   --sea-blue: #19a7ce;
-  --darker-blue: #146c94;
+  --darker-blue: #ff6464;
   --light-gray: #f6f1f1;
-  --green: #29aa29;
+  --green: #6fc26f;
 }
 
 @font-face {
@@ -21,23 +21,21 @@
     /* Safari, Android, iOS */ url("./roboto-v30-latin-regular.svg#Roboto")
       format("svg"); /* Legacy iOS */
 }
-
+html body {
+  min-height: 100vh;
+}
 body {
+  display: flex;
+  flex-direction: column;
   font-family: "Roboto";
   background-color: var(--sea-blue);
-  height: fit-content;
+  height: 100vh;
   overflow: auto;
   margin: 0;
-  border-collapse: collapse;
-  border-spacing: 0;
 }
 h1,
 h3 {
   margin: 0;
-}
-
-img {
-  height: 12px;
 }
 
 .header {
@@ -61,13 +59,21 @@ img {
   height: 24px;
 }
 footer {
-  height: 60px;
+  height: 70px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   font-weight: 700;
   align-items: center;
   background-color: var(--green);
   border-top: 2px solid black;
+}
+footer p {
+  margin: 0;
+}
+footer a {
+  color: black;
+  text-decoration: none;
 }
 .title {
   margin: 0;
@@ -75,7 +81,7 @@ footer {
 }
 .page-container {
   display: flex;
-  /* border: 2px solid black; */
+  flex: 1;
 }
 .sidebar {
   display: flex;
@@ -94,23 +100,18 @@ footer {
   .menu-btn {
     display: block;
   }
-  .content.sidebar-open  {
+  .content.sidebar-open {
     display: none;
   }
   .sidebar.sidebar-open {
     display: block;
-    width: 100vw
+    width: 100vw;
   }
 }
 .side {
   display: flex;
   flex-direction: column;
-  /* position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0; */
   flex: 1 0 33%;
-  /* width: 200px; */
   background-color: var(--darker-blue);
   height: 100vh;
   padding: 25px 25px 0 0;
@@ -138,11 +139,10 @@ a {
 .DoIt {
   padding-left: 20px;
 }
-button:not(.menu-btn) {
+button:not(.menu-btn, .delTask, .delete-proj-btn) {
   background-color: var(--light-gray);
   border: 2px solid black;
   color: black;
-  /* padding: 10px 20px; */
   text-align: center;
   text-decoration: none;
   display: inline-block;
@@ -160,20 +160,22 @@ button:not(
     #submitBtn,
     .menu-btn
   ):hover {
-  background-color: var(--bright-blue);
-  /* color: var(--light-gray); */
+  background-color: var(--green);
 }
 .delete-proj-btn:hover,
 .delTask:hover {
-  background-color: var(--light-gray);
-  color: black;
+  opacity: 0.5;
+}
+.delTask:hover {
+  background-color: var(--green);
 }
 .myTask.active:hover,
+.myTask:hover .delTask,
 .task-cancel:hover,
 .proj-cancel:hover,
 #projSubmit:hover,
 #submitBtn:hover {
-  background-color: var(--darker-blue);
+  background-color: var(--green);
 }
 
 input {
@@ -189,14 +191,7 @@ input {
   max-width: 135px;
   grid-template-columns: minmax(0, 1fr) minmax(0, 35px);
 }
-/* .proj-list [data-type="Proj"] {
-  display: flex;
-  padding: 5px 15px;
-  text-align: center;
-} */
-/* div.Proj {
 
-} */
 .myInbox.active {
   width: fit-content;
 }
@@ -204,26 +199,17 @@ input {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 10px;
-  font-weight: bold;
-  padding: 5px 5px 5px 5px;
-  background-color: black;
-  color: var(--light-gray);
+  background-color: var(--darker-blue);
   border: none;
-
-  /* border: 2px solid var(--light-gray); */
+}
+.delete-proj-btn img {
+  color: black;
 }
 .delTask {
-  padding: 5px 5px 5px 5px;
-  background-color: black;
-  color: var(--light-gray);
+  border: none;
+  background-color: var(--light-gray);
+  padding: 0;
 }
-/* .content {
-  
-  
-  width: fit-content;
-} */
-
 .new-task {
   display: none;
 }
@@ -245,9 +231,6 @@ input {
 
 .new-proj-task.active {
   display: block;
-  /* position: relative;
-  left: 200px;
-  width: fit-content; */
 }
 
 .task-info {
@@ -267,13 +250,13 @@ input {
   margin: 10px 0;
 }
 
-#listDiv {
+/* #listDiv {
   display: none;
-}
-
+} */
+/* 
 #listDiv.active {
   display: block;
-}
+} */
 
 .myInbox,
 #myProjForm,
@@ -284,7 +267,9 @@ input {
 .name-el,
 .date-el,
 .name-el-proj,
-.date-el-proj {
+.date-el-proj,
+#listDiv,
+.addProjTaskBtn.inactive {
   display: none;
 }
 
@@ -295,40 +280,18 @@ input {
 .name-el.active,
 .date-el.active,
 .name-el-proj.active,
-.date-el-proj.active {
+.date-el-proj.active,
+.myInbox.active,
+#myProjForm.active,
+#listDiv.active {
   display: block;
 }
 
-.myInbox.active,
+/* .myInbox.active,
 #myProjForm.active {
   display: block;
-  /* position: relative;
-  left: 200px;
-  width: fit-content; */
-}
+} */
 
-.addProjTaskBtn.inactive {
+/* .addProjTaskBtn.inactive {
   display: none;
-}
-
-/* #project-form {
-  position: relative;
-  left: 200px;
-  width: fit-content;
-}
-
-#myForm {
-  position: relative;
-  left: 200px;
-  width: fit-content;
-} */
-
-/* .name-el-proj.active, .name-input-proj.active, .date-el-proj.active, .date-input-proj.active {
-  ;
-} */
-
-/* .myTask.active {
-  outline: 2px solid var(--dark-gray);
-  border-radius: 3px;
-  width: 100%;
 } */

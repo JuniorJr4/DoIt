@@ -27,7 +27,7 @@ export default class Storage {
   }
   static removeProjTask(proj, task) {
     let projToEdit = Storage.getProject(proj);
-    console.log(projToEdit);
+    // console.log(projToEdit);
     let indexToDelete;
     projToEdit.taskList.forEach((el, index) => {
       if (el[0] === task) {
@@ -45,12 +45,10 @@ export default class Storage {
     );
     let [name, dueDate] = projToEdit.taskList[subArrayIndexToEdit];
     name = newTaskName;
-    //dueDate = newTaskDate;
     projToEdit.taskList[subArrayIndexToEdit] = [name, dueDate];
     console.log(dueDate);
     Storage.removeProj(proj);
     Storage.storeProj(proj, projToEdit);
-    //return projToEdit;
   }
   static editProjTaskDate(proj, taskName, newTaskDate) {
     let projToEdit = Storage.getProject(proj);
@@ -58,13 +56,10 @@ export default class Storage {
       (subArray) => subArray[0] === taskName
     );
     let [name, dueDate] = projToEdit.taskList[subArrayIndexToEdit];
-    //name = newTaskName;
     dueDate = newTaskDate;
     projToEdit.taskList[subArrayIndexToEdit] = [name, dueDate];
-    console.log(dueDate);
     Storage.removeProj(proj);
     Storage.storeProj(proj, projToEdit);
-    //return projToEdit;
   }
   static getTaskItems() {
     let items = [];
@@ -97,7 +92,6 @@ export default class Storage {
   }
   static formatDate(date) {
     // If input is a string, convert it to a Date object
-    console.log(new Date(date));
     if (typeof date === "string") {
       date =new Date(date);
       console.log(date);
@@ -111,20 +105,6 @@ export default class Storage {
     // Check if the date is already in the desired format
     const formattedDate = format(date, "dd/MM/yyyy");
     return formattedDate;
-    // if (isValid(date)) {
-    //   const formattedDate = format(date, "dd/MM/yyyy");
-    //   console.log(formattedDate);
-    //   return formattedDate;
-    // } else if (typeof date === "string") {
-    //   const dateObject = parse(date, "dd/MM/yyyy", new Date());
-    //   console.log(dateObject);
-    //   if (isValid(dateObject)) {
-    //     const formattedDate = format(dateObject, "dd/MM/yyyy");
-    //     console.log(formattedDate);
-    //     return formattedDate;
-    //   } else {
-    //     return "No Due Date";
-    //   }
-    // }
+    
   }
 }
