@@ -1,0 +1,297 @@
+:root {
+  --bright-blue: #7388ff;
+  --sea-blue: #19a7ce;
+  --darker-blue: #ff6464;
+  --light-gray: #f6f1f1;
+  --green: #6fc26f;
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./roboto-v30-latin-regular.eot"); /* IE9 Compat Modes */
+  src: local(""),
+    url("./roboto-v30-latin-regular.eot?#iefix") format("embedded-opentype"),
+    /* IE6-IE8 */ url("./roboto-v30-latin-regular.woff2") format("woff2"),
+    /* Super Modern Browsers */ url("./roboto-v30-latin-regular.woff")
+      format("woff"),
+    /* Modern Browsers */ url("./roboto-v30-latin-regular.ttf")
+      format("truetype"),
+    /* Safari, Android, iOS */ url("./roboto-v30-latin-regular.svg#Roboto")
+      format("svg"); /* Legacy iOS */
+}
+html body {
+  min-height: 100vh;
+}
+body {
+  display: flex;
+  flex-direction: column;
+  font-family: "Roboto";
+  background-color: var(--sea-blue);
+  height: 100vh;
+  overflow: auto;
+  margin: 0;
+}
+h1,
+h3 {
+  margin: 0;
+}
+
+.header {
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: var(--green);
+  margin: 0;
+  padding: 0;
+}
+.menu-btn {
+  display: none;
+  width: 30px;
+  background-color: var(--green);
+  border: none;
+  margin-left: 18px;
+  padding: 5px 0 0 0;
+}
+img {
+  height: 24px;
+}
+footer {
+  height: 70px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-weight: 700;
+  align-items: center;
+  background-color: var(--green);
+  border-top: 2px solid black;
+}
+footer p {
+  margin: 0;
+}
+footer a {
+  color: black;
+  text-decoration: none;
+}
+.title {
+  margin: 0;
+  padding-left: 20px;
+}
+.page-container {
+  display: flex;
+  flex: 1;
+}
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: auto;
+  border-width: 2px 2px 0 0;
+  border-style: solid;
+  border-color: black;
+}
+
+@media only screen and (max-width: 600px) {
+  .sidebar {
+    display: none;
+  }
+  .menu-btn {
+    display: block;
+  }
+  .content.sidebar-open {
+    display: none;
+  }
+  .sidebar.sidebar-open {
+    display: block;
+    width: 100vw;
+  }
+}
+.side {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 33%;
+  background-color: var(--darker-blue);
+  height: 100vh;
+  padding: 25px 25px 0 0;
+}
+.content {
+  display: flex;
+  flex: 9999 0 67%;
+  padding: 25px 0 0 25px;
+
+  border-width: 2px 0 0 0;
+  border-style: solid;
+  border-color: black;
+}
+
+button:not(.delete-proj-btn, .delTask, .menu-btn) {
+  padding: 5px 15px;
+}
+
+li,
+a {
+  text-decoration: none;
+  list-style: none;
+}
+
+.DoIt {
+  padding-left: 20px;
+}
+button:not(.menu-btn, .delTask, .delete-proj-btn) {
+  background-color: var(--light-gray);
+  border: 2px solid black;
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+button:not(
+    .delete-proj-btn,
+    .delTask,
+    .task-cancel,
+    .proj-cancel,
+    #projSubmit,
+    #submitBtn,
+    .menu-btn
+  ):hover {
+  background-color: var(--green);
+}
+.delete-proj-btn:hover,
+.delTask:hover {
+  opacity: 0.5;
+}
+.delTask:hover {
+  background-color: var(--green);
+}
+.myTask.active:hover,
+.myTask:hover .delTask,
+.task-cancel:hover,
+.proj-cancel:hover,
+#projSubmit:hover,
+#submitBtn:hover {
+  background-color: var(--green);
+}
+
+input {
+  border: 2px solid black;
+  border-radius: 4px;
+  font-size: 16px;
+  height: 28px;
+  font-family: "Roboto";
+}
+
+.proj-list {
+  display: grid;
+  max-width: 135px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 35px);
+}
+
+.myInbox.active {
+  width: fit-content;
+}
+.delete-proj-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--darker-blue);
+  border: none;
+}
+.delete-proj-btn img {
+  color: black;
+}
+.delTask {
+  border: none;
+  background-color: var(--light-gray);
+  padding: 0;
+}
+.new-task {
+  display: none;
+}
+
+.new-task.active {
+  display: block;
+}
+
+.project-info {
+  display: none;
+}
+
+.project-info.active {
+  display: block;
+}
+.new-proj-task {
+  display: none;
+}
+
+.new-proj-task.active {
+  display: block;
+}
+
+.task-info {
+  display: none;
+}
+
+.myTask.active {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 35px);
+  grid-gap: 10px;
+  align-items: center;
+  outline: 2px solid black;
+  border-radius: 3px;
+  width: auto;
+  padding: 0 5px;
+  background-color: var(--light-gray);
+  margin: 10px 0;
+}
+
+/* #listDiv {
+  display: none;
+} */
+/* 
+#listDiv.active {
+  display: block;
+} */
+
+.myInbox,
+#myProjForm,
+.name-input,
+.name-input-proj,
+.date-input,
+.date-input-proj,
+.name-el,
+.date-el,
+.name-el-proj,
+.date-el-proj,
+#listDiv,
+.addProjTaskBtn.inactive {
+  display: none;
+}
+
+.name-input.active,
+.name-input-proj.active,
+.date-input.active,
+.date-input-proj.active,
+.name-el.active,
+.date-el.active,
+.name-el-proj.active,
+.date-el-proj.active,
+.myInbox.active,
+#myProjForm.active,
+#listDiv.active {
+  display: block;
+}
+
+/* .myInbox.active,
+#myProjForm.active {
+  display: block;
+} */
+
+/* .addProjTaskBtn.inactive {
+  display: none;
+} */
